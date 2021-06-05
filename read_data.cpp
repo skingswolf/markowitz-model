@@ -4,25 +4,22 @@
 using namespace std;
 
 /**
- * Example commands to run this file:
- * 
- * g++ -c read_data.cpp 
- * g++ -c csv.cpp
- * g++ -o portfolioSolver csv.o read_data.o
- * ./portfolioSolver
+ * Main function here purely included to allow for debugging read data
+ * functions in this file. 
  **/
-
 int main(int argc, char *argv[])
 {
-    // Read the data from the file and store it into the return matrix.
-    // returnMatrix[i][j] will store the asset i, return j value.
-    string fileName = "asset_returns_small.csv";
-
-    // TODO
+    // string fileName = "asset_returns.csv";
     // int numberOfAssets = 83;
     // int numberOfReturns = 700;
-    int numberOfAssets = 5;
-    int numberOfReturns = 10;
+
+    // string fileName = "asset_returns_small.csv";
+    // int numberOfAssets = 5;
+    // int numberOfReturns = 10;
+
+    string fileName = "dummy_returns.csv";
+    int numberOfAssets = 4;
+    int numberOfReturns = 4;
 
     // A matrix to store the return data.
     vector<vector<double> > returnMatrix = readData(numberOfAssets, numberOfReturns, fileName);
@@ -102,6 +99,7 @@ vector<vector<double> > readData(int numberOfAssets, int numberOfReturns, string
     }
 
     // Read through the file line by line, reading return values into returns matrix.
+    // returnsMatrix[i][j] will store the asset i, return j value.
     for (int returnIdx = 0; csv.getline(line) != 0; returnIdx++)
     {
         for (int assetIdx = 0; assetIdx < csv.getnfield(); assetIdx++)

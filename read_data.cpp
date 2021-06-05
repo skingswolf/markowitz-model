@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
  * @param s - The string to be converted into a double.
  * @return The newly cast double, or 0 if `s` didn't correspond to a string.
  **/
-double stringToDouble(const std::string &s)
+double stringToDouble(const string &s)
 {
     std::istringstream i(s);
 
@@ -73,7 +73,7 @@ double stringToDouble(const std::string &s)
  * @param fileName The name of the file to read the asset returns from.
  * @return A vector of vectors representing the returns matrix.
  **/
-vector<vector<double> > readData(const int &numberOfAssets, const int &numberOfReturns, const string &fileName)
+vector<vector<double> > readData(int numberOfAssets, int numberOfReturns, const string &fileName)
 {
     char tmp[20];
     ifstream file(strcpy(tmp, fileName.c_str()));

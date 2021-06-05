@@ -1,9 +1,7 @@
 
-#include <stdio.h>
-#include <fstream>
-#include <stdlib.h>
-#include <sstream>
-#include "csv.h"
+#include "read_data.h"
+
+using namespace std;
 
 /**
  * Example commands to run this file:
@@ -14,20 +12,22 @@
  * ./portfolioSolver
  **/
 
-double stringToDouble(const std::string &s);
-void readData(double **data, string fileName);
-
 int main(int argc, char *argv[])
 {
 
-    int numberAssets = 83;
-    int numberReturns = 700;
-    double **returnMatrix = new double *[numberAssets]; // a matrix to store the return data
+    // int numberOfAssets = 83;
+    // int numberOfReturns = 700;
+    int numberOfAssets = 5;
+    int numberOfReturns = 10;
+
+    vector<vector<double> > returnMatrix; // a matrix to store the return data
+
+    returnMatrix.resize(numberOfAssets);
 
     // Allocate memory for return data.
-    for (int i = 0; i < numberAssets; i++)
+    for (int i = 0; i < numberOfAssets; i++)
     {
-        returnMatrix[i] = new double[numberReturns];
+        returnMatrix[i].resize(numberOfReturns, -1);
     }
 
     // Read the data from the file and store it into the return matrix.
@@ -38,21 +38,18 @@ int main(int argc, char *argv[])
     // Example on how to calculate the average return.
     double mean = 0;
 
-    for (int i = 0; i < numberAssets; i++)
+    for (int i = 0; i < numberOfAssets; i++)
     {
         mean = 0;
-        for (int j = 0; j < numberReturns; j++)
+        for (int j = 0; j < numberOfReturns; j++)
         {
             double temp = returnMatrix[i][j];
-            // cout << "Asset " << assetNo << ", Return " << i << "=" << temp << "\n";
-            mean = mean + temp / numberReturns;
+            cout << "Asset " << i << ", Return " << j << "=" << temp << "\n";
+            mean = mean + temp / numberOfReturns;
         }
-    }
 
-    // Deallocate memory.
-    for (int i = 0; i < numberAssets; i++)
-        delete[] returnMatrix[i];
-    delete[] returnMatrix;
+        cout << "------------\n";
+    }
 
     return 0;
 }
@@ -85,33 +82,40 @@ double stringToDouble(const std::string &s)
  * @param data - an array to store the asset returns.
  * @param fileName The name of the file to read the asset returns from.
  **/
-void readData(double **data, string fileName)
+void readData(vector<vector<double> > &data, string fileName)
 {
+    // vector<vector<double> > returnMatrix; // a matrix to store the return data
+
+    // returnMatrix.resize(numberOfAssets);
+
+    // // Allocate memory for return data.
+    // for (int i = 0; i < numberOfAssets; i++)
+    // {
+    //     returnMatrix[i].resize(numberOfReturns, -1);
+    // }
+
     char tmp[20];
     ifstream file(strcpy(tmp, fileName.c_str()));
     Csv csv(file);
     string line;
-    if (file.is_open())
-    {
-        int i = 0;
-        while (csv.getline(line) != 0)
-        {
-            for (int j = 0; j < csv.getnfield(); j++)
-            {
-                double temp = stringToDouble(csv.getfield(j));
-                cout << "Asset " << j << ", Return " << i << "=" << temp << "\n";
-                data[j][i] = temp;
-            }
 
-            cout << "------------\n";
-            i++;
-        }
-
-        file.close();
-    }
-    else
+    if (!file.is_open())
     {
         cout << fileName << " missing\n";
         exit(0);
     }
+
+    for (int returnIdx = 0; csv.getline(line) != 0; returnIdx++)
+    {
+        for (int assetIdx = 0; assetIdx < csv.getnfield(); assetIdx++)
+        {
+            double temp = stringToDouble(csv.getfield(assetIdx));
+            // cout << "Asset " << assetIdx << ", Return " << returnIdx << "=" << temp << "\n";
+            data[assetIdx][returnIdx] = temp;
+        }
+
+        // cout << "------------\n";
+    }
+
+    file.close();
 }

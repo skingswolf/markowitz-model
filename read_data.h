@@ -25,6 +25,6 @@ double stringToDouble(const std::string &s);
  * @param fileName The name of the file to read the asset returns from.
  * @return A vector of vectors representing the returns matrix.
  **/
-vector<vector<double> > readData(int numberOfAssets, int numberOfReturns, string fileName);
+vector<vector<double> > readData(const int &numberOfAssets, const int &numberOfReturns, const string &fileName);
 
 #endif

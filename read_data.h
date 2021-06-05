@@ -20,9 +20,11 @@ double stringToDouble(const std::string &s);
  * Reads the asset returns from the file corresponding to `fileName` into
  * the `data` array.
  * 
- * @param data - an array to store the asset returns.
+ * @param numberOfAssets - The number of rows to read from the CSV file.
+ * @param numberOfReturns - The number of columns to read from the CSV file.
  * @param fileName The name of the file to read the asset returns from.
+ * @return A vector of vectors representing the returns matrix.
  **/
-void readData(vector<vector<double> > &data, string fileName);
+vector<vector<double> > readData(int numberOfAssets, int numberOfReturns, string fileName);
 
 #endif

@@ -11,4 +11,4 @@ read_data: csv.o read_data.o
 
 .PHONY: clean
 clean:
-	rm -rf *.o 
+	rm -r *.o read_data

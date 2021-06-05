@@ -22,7 +22,7 @@ using namespace std;
 //     int numberOfReturns = 5;
 
 //     // A matrix to store the return data.
-//     vector<vector<double> > returnMatrix = readData(numberOfAssets, numberOfReturns, fileName);
+//     vector<vector<double> > returnMatrix = readData(fileName, numberOfAssets, numberOfReturns);
 
 //     // Example on how to calculate the average return.
 //     double mean = 0;
@@ -68,12 +68,12 @@ double stringToDouble(const string &s)
  * Reads the asset returns from the file corresponding to `fileName` into
  * the `data` array.
  * 
+ * @param fileName The name of the file to read the asset returns from.
  * @param numberOfAssets - The number of rows to read from the CSV file.
  * @param numberOfReturns - The number of columns to read from the CSV file.
- * @param fileName The name of the file to read the asset returns from.
  * @return A vector of vectors representing the returns matrix.
  **/
-vector<vector<double> > readData(int numberOfAssets, int numberOfReturns, const string &fileName)
+vector<vector<double> > readData(const string &fileName, int numberOfAssets, int numberOfReturns)
 {
     char tmp[20];
     ifstream file(strcpy(tmp, fileName.c_str()));

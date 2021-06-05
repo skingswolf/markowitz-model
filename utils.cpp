@@ -1,4 +1,3 @@
-
 #include "utils.h"
 
 using namespace std;
@@ -14,16 +13,84 @@ int main(int argc, char *argv[])
     int numberOfReturns = 5;
 
     // A matrix to store the return data.
-    vector<vector<double> > returnsMatrix = readData(numberOfAssets, numberOfReturns, fileName);
+    vector<vector<double> > returnsMatrix = readData(fileName, numberOfAssets, numberOfReturns);
 
-    int assetIdx = 0;
-    int returnsStartIdx = 2;
+    int returnsStartIdx = 0;
     int returnsEndIdx = 4;
-    cout << estimateMeanReturns(returnsMatrix, assetIdx, returnsStartIdx, returnsEndIdx) << endl;
 
-    printMatrix(returnsMatrix, numberOfAssets, numberOfReturns);
+    vector<vector<double> > covarianceMatrix = estimateCovarianceMatrix(returnsMatrix, returnsStartIdx, returnsEndIdx);
+
+    printMatrix(covarianceMatrix);
 
     return 0;
+}
+
+/**
+ * Given a vector of returns, this function calculates and returns the covariance matrix.
+ * The start and end index parameters denote the (inclusive) range of returns
+ * to calculate the covariance matrix for.
+ * 
+ * @param returnsMatrix - The matrix of returns.
+ * @param returnsStartIdx - The start index of the returns.
+ * @param returnsEndIdx - The end index of the returns.
+ * @return The covariance matrix.
+ **/
+vector<vector<double> > estimateCovarianceMatrix(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx)
+{
+    // The number of days in the sample period (inclusive bounds - `returnsStartIdx` and `returnsEndIdx`)
+    // that the covariance of returns matrix is being calculated for.
+    double numberOfDays = returnsEndIdx + 1 - returnsStartIdx;
+
+    // Number of rows and columns respectively.
+    int numberOfAssets = returnsMatrix.size();
+
+    // A matrix to store the return data. The mean return at index i corresponds to
+    // the average of the returns bounded by `returnsStartIdx` and `returnsEndIdx`.
+    vector<double> meanReturns;
+    meanReturns.resize(numberOfAssets);
+
+    // Populate mean returns vector. The entry at index `assetIdx`
+    // in the vector corresponds to the average return of the returns
+    // bounded by the indices `returnsStartIdx` and `returnsEndIdx`;
+    for (int assetIdx = 0; assetIdx < numberOfAssets; assetIdx++)
+    {
+        meanReturns[assetIdx] = calculateMeanReturn(returnsMatrix, assetIdx, returnsStartIdx, returnsEndIdx);
+    }
+
+    // A matrix to store the covariance data.
+    vector<vector<double> > covarianceMatrix;
+
+    // Allocate memory for covariance data.
+    covarianceMatrix.resize(numberOfAssets);
+
+    for (int i = 0; i < numberOfAssets; i++)
+    {
+        covarianceMatrix[i].resize(numberOfAssets);
+    }
+
+    // Temporary variables used in covariance calculation.
+    double sumOfMeanDeviationProducts, productOfMeanDeviations;
+
+    // Populate covariance matrix.
+    for (int i = 0; i < numberOfAssets; i++)
+    {
+        for (int j = 0; j < numberOfAssets; j++)
+        {
+            sumOfMeanDeviationProducts = 0;
+
+            for (int k = returnsStartIdx; k <= returnsEndIdx; k++)
+            {
+                productOfMeanDeviations = (returnsMatrix[i][k] - meanReturns[i]) * (returnsMatrix[j][k] - meanReturns[j]);
+
+                sumOfMeanDeviationProducts += productOfMeanDeviations;
+            }
+
+            // Assign calculated covariance value into covariance matrix.
+            covarianceMatrix[i][j] = sumOfMeanDeviationProducts / (numberOfDays - 1);
+        }
+    }
+
+    return covarianceMatrix;
 }
 
 /**
@@ -36,7 +103,7 @@ int main(int argc, char *argv[])
  * @param returnsEndIdx - The end index of the returns.
  * @return The average return.
  **/
-double estimateMeanReturns(const vector<vector<double> > &returnsMatrix, int assetIdx, int returnsStartIdx, int returnsEndIdx)
+double calculateMeanReturn(const vector<vector<double> > &returnsMatrix, int assetIdx, int returnsStartIdx, int returnsEndIdx)
 {
     double meanReturn = 0;
     double numberOfReturns = 0;
@@ -44,7 +111,6 @@ double estimateMeanReturns(const vector<vector<double> > &returnsMatrix, int ass
     for (int returnsIdx = returnsStartIdx; returnsIdx <= returnsEndIdx; returnsIdx++)
     {
         meanReturn += returnsMatrix[assetIdx][returnsIdx];
-        cout << returnsMatrix[assetIdx][returnsIdx] << endl;
         numberOfReturns += 1;
     }
 
@@ -55,22 +121,28 @@ double estimateMeanReturns(const vector<vector<double> > &returnsMatrix, int ass
  * Prints a matrix of generic type "T" to STDOUT.
  * 
  * @param matrix - The matrix to be printed.
- * @param numberOfRows - The number of rows in the matrix.
- * @param numberOfColumns - The number of columns in the matrix.
  **/
 template <typename T>
-void printMatrix(const T &matrix, int numberOfRows, int numberOfColumns)
+void printMatrix(const T &matrix)
 {
-    cout << "Printing matrix: \n";
-
     for (int rowIdx = 0; rowIdx < matrix.size(); rowIdx++)
     {
-        for (int columnIdx = 0; columnIdx < matrix[0].size(); columnIdx++)
-        {
-            cout << matrix[rowIdx][columnIdx] << " ";
-        }
+        printRowVector(matrix[rowIdx]);
 
         cout << endl;
     }
-    cout << endl;
+}
+
+/**
+ * Prints a row vector of generic type "T" to STDOUT.
+ * 
+ * @param rowVector - The row vector to be printed.
+ **/
+template <typename T>
+void printRowVector(const T &rowVector)
+{
+    for (int i = 0; i < rowVector.size(); i++)
+    {
+        cout << rowVector[i] << " ";
+    }
 }

@@ -14,12 +14,12 @@ int main(int argc, char *argv[])
 
     // A matrix to store the return data.
     vector<vector<double> > returnsMatrix = readData(fileName, numberOfAssets, numberOfReturns);
+    vector<vector<double> > otherReturnsMatrix = readData(fileName, numberOfAssets, numberOfReturns);
 
     printMatrix(returnsMatrix);
     cout << "\n-----" << endl;
 
-    multiplyMatrixWithConstant(returnsMatrix, 1. / 2);
-    printMatrix(returnsMatrix);
+    printMatrix(subtractMatrices(returnsMatrix, otherReturnsMatrix));
 
     return 0;
 }
@@ -112,27 +112,6 @@ vector<vector<T> > multiplyMatrices(vector<T> &rowVector, vector<vector<T> > &ot
 }
 
 /**
- * Applies a scalar function to a matrix. Matrix is modified in place.
- * 
- * @param matrix - The matrix to which a scalar function will be applied.
- * @param scalarFunction - The scalar function.
- **/
-template <typename T>
-void applyScalarFunctionToMatrix(vector<vector<T> > &matrix, T (*scalarFunction)(T))
-{
-    int numberOfRows = matrix.size();
-    int numberOfColumns = matrix[0].size();
-
-    for (int i = 0; i < numberOfRows; i++)
-    {
-        for (int j = 0; j < numberOfColumns; j++)
-        {
-            matrix[i][j] = scalarFunction(matrix[i][j]);
-        }
-    }
-}
-
-/**
  * Multiplies each element in a matrix with a constant. Modifies matrix inplace.
  * 
  * @param matrix - The matrix to which each element will be multiplied with the constant.
@@ -151,6 +130,100 @@ void multiplyMatrixWithConstant(vector<vector<T> > &matrix, T constant)
             matrix[i][j] = matrix[i][j] * constant;
         }
     }
+}
+
+/**
+ * Adds the two given matrices together. 
+ * 
+ * @param matrix - The left component in the matrix addition.
+ * @param otherMatrix - The right component in the matrix addition.
+ * @return The output matrix from the multiplication.
+ **/
+template <typename T>
+vector<vector<T> > addMatrices(vector<vector<T> > matrix, vector<vector<T> > otherMatrix)
+{
+    return applyBinaryOperatorToMatrices(matrix, otherMatrix, add);
+}
+
+/**
+ * Subtracts the second given matrix from the first given matrix. 
+ * 
+ * @param matrix - The left component in the matrix subtraction.
+ * @param otherMatrix - The right component in the matrix subtraction.
+ * @return The output matrix from the multiplication.
+ **/
+template <typename T>
+vector<vector<T> > subtractMatrices(vector<vector<T> > matrix, vector<vector<T> > otherMatrix)
+{
+    return applyBinaryOperatorToMatrices(matrix, otherMatrix, subtract);
+}
+
+/**
+ * Add the two given values.
+ * 
+ * @param x - The left component in the addition.
+ * @param y - The right component in the addition.
+ * @return - The sum of the two given values
+ **/
+template <typename T>
+T add(T x, T y)
+{
+    return x + y;
+}
+
+/**
+ * Subtract the two given values.
+ * 
+ * @param x - The left component in the subtraction.
+ * @param y - The right component in the subtraction.
+ * @return - The subtraction of the two given values
+ **/
+template <typename T>
+T subtract(T x, T y)
+{
+    return x - y;
+}
+
+/**
+ * Apply the given binary operator to the two given matrices.
+ * 
+ * @param matrix - The left component in the binary operator.
+ * @param otherMatrix - The right component in the binary operator.
+ * @return The newly created matrix.
+ **/
+template <typename T>
+vector<vector<T> > applyBinaryOperatorToMatrices(vector<vector<T> > matrix, vector<vector<T> > otherMatrix, T (*operatorFunction)(T, T))
+{
+    int numberOfRows = matrix.size();
+    int numberOfColumns = matrix[0].size();
+
+    int numberOfOtherMatrixRows = otherMatrix.size();
+    int numberOfOtherMatrixColumns = otherMatrix[0].size();
+
+    // Check if the dimensions of `matrix` and `otherMatrix` are
+    // compatible with each other.
+    if (numberOfRows != numberOfOtherMatrixRows || numberOfColumns != numberOfOtherMatrixColumns)
+    {
+        cout << "Matrix dimensions are not compatible for the matrix binary operation." << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    vector<vector<T> > outputMatrix;
+
+    // Allocate memory for transposedMatrix.
+    outputMatrix.resize(numberOfRows);
+
+    for (int i = 0; i < numberOfRows; i++)
+    {
+        outputMatrix[i].resize(numberOfColumns);
+
+        for (int j = 0; j < numberOfColumns; j++)
+        {
+            outputMatrix[i][j] = operatorFunction(matrix[i][j], otherMatrix[i][j]);
+        }
+    }
+
+    return outputMatrix;
 }
 
 /**

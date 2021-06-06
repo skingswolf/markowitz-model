@@ -55,13 +55,54 @@ template <typename T>
 void multiplyMatrixWithConstant(vector<vector<T> > &matrix, T constant);
 
 /**
- * Applies a scalar function to a matrix. Matrix is modified in place.
+ * Adds the two given matrices together. 
  * 
- * @param matrix - The matrix to which a scalar function will be applied.
- * @param scalarFunction - The scalar function.
+ * @param matrix - The left component in the matrix addition.
+ * @param otherMatrix - The right component in the matrix addition.
+ * @return The output matrix from the multiplication.
  **/
 template <typename T>
-void applyScalarFunctionToMatrix(vector<vector<T> > &matrix, T (*scalarFunction)(T));
+vector<vector<T> > addMatrices(vector<vector<T> > matrix, vector<vector<T> > otherMatrix);
+
+/**
+ * Subtracts the second given matrix from the first given matrix. 
+ * 
+ * @param matrix - The left component in the matrix subtraction.
+ * @param otherMatrix - The right component in the matrix subtraction.
+ * @return The output matrix from the multiplication.
+ **/
+template <typename T>
+vector<vector<T> > subtractMatrices(vector<vector<T> > matrix, vector<vector<T> > otherMatrix);
+
+/**
+ * Add the two given values.
+ * 
+ * @param x - The left component in the addition.
+ * @param y - The right component in the addition.
+ * @return - The sum of the two given values
+ **/
+template <typename T>
+T add(T x, T y);
+
+/**
+ * Subtract the two given value.
+ * 
+ * @param x - The left component in the subtraction.
+ * @param y - The right component in the subtraction.
+ * @return - The subtraction of the two given values
+ **/
+template <typename T>
+T subtract(T x, T y);
+
+/**
+ * Apply the given binary operator to the two given matrices.
+ * 
+ * @param matrix - The left component in the binary operator.
+ * @param otherMatrix - The right component in the binary operator.
+ * @return The newly created matrix.
+ **/
+template <typename T>
+vector<vector<T> > applyBinaryOperatorToMatrices(vector<vector<T> > matrix, vector<vector<T> > otherMatrix, T (*operatorFunction)(T, T));
 
 /**
  * Prints a matrix of generic type "T" to STDOUT.

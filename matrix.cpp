@@ -265,7 +265,7 @@ void printRowVector(const vector<T> &rowVector)
     }
 }
 
-/***************** Explicit Instantiations for use in Markowitz model *****************/
+/***************** Explicit Instantiations for use in markowitz_model.cpp *****************/
 
 template vector<vector<double> > multiplyMatrices(vector<vector<double> > &matrix, vector<vector<double> > &otherMatrix);
 template vector<vector<double> > multiplyMatrices(vector<vector<double> > &matrix, vector<double> &rowVector);

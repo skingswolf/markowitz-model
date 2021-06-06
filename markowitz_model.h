@@ -43,6 +43,43 @@ private:
     const double toleranceThreshold = 0.000001;
 
     /**
+     * Updates the column vector p.
+     * 
+     * Dimensions: (no_of_assets + 2) x 1
+     * 
+     * @param s - The column vector s.
+     * @param p - The column vector s.
+     * @param beta - The scalar value beta.
+     * @return The updated column vector p.
+     **/
+    vector<vector<double> > updateP(vector<vector<double> > &s, vector<vector<double> > &p, double beta);
+
+    /**
+     * Updates the column vector s.
+     * 
+     * Dimensions: (no_of_assets + 2) x 1
+     * 
+     * @param s - The column vector s.
+     * @param Q - The matrix Q.
+     * @param p - The column vector s.
+     * @param alpha - The scalar value alpha.
+     * @return The updated column vector x.
+     **/
+    vector<vector<double> > updateS(vector<vector<double> > &s, vector<vector<double> > &Q, vector<vector<double> > &p, double alpha);
+
+    /**
+     * Updates the column vector x.
+     * 
+     * Dimensions: (no_of_assets + 2) x 1
+     * 
+     * @param x - The column vector x.
+     * @param p - The matrix p.
+     * @param alpha - The scalar value alpha.
+     * @return The updated column vector x.
+     **/
+    vector<vector<double> > updateX(vector<vector<double> > &x, vector<vector<double> > &p, double alpha);
+
+    /**
      * Calculate the beta in the conjugate gradient method.
      * 
      * @param sProduct - the scalar value s_{k+1}^T * s_{k+1}.

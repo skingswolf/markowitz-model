@@ -94,18 +94,22 @@ vector<vector<T> > multiplyMatrices(vector<T> &rowVector, vector<vector<T> > &ot
  * @param scalarFunction - The scalar function.
  **/
 template <typename T>
-void multiplyMatrixWithConstant(vector<vector<T> > &matrix, T constant)
+vector<vector<T> > multiplyMatrixWithConstant(vector<vector<T> > &matrix, T constant)
 {
-    int numberOfRows = matrix.size();
-    int numberOfColumns = matrix[0].size();
+    vector<vector<double> > outputMatrix = copyMatrix(matrix);
+
+    int numberOfRows = outputMatrix.size();
+    int numberOfColumns = outputMatrix[0].size();
 
     for (int i = 0; i < numberOfRows; i++)
     {
         for (int j = 0; j < numberOfColumns; j++)
         {
-            matrix[i][j] = matrix[i][j] * constant;
+            outputMatrix[i][j] = matrix[i][j] * constant;
         }
     }
+
+    return outputMatrix;
 }
 
 /**
@@ -326,7 +330,7 @@ void printRowVector(vector<T> &rowVector)
 template vector<vector<double> > multiplyMatrices(vector<vector<double> > &matrix, vector<vector<double> > &otherMatrix);
 template vector<vector<double> > multiplyMatrices(vector<vector<double> > &matrix, vector<double> &rowVector);
 template vector<vector<double> > multiplyMatrices(vector<double> &rowVector, vector<vector<double> > &otherMatrix);
-template void multiplyMatrixWithConstant(vector<vector<double> > &matrix, double constant);
+template vector<vector<double> > multiplyMatrixWithConstant(vector<vector<double> > &matrix, double constant);
 template vector<vector<double> > addMatrices(vector<vector<double> > matrix, vector<vector<double> > otherMatrix);
 template vector<vector<double> > subtractMatrices(vector<vector<double> > matrix, vector<vector<double> > otherMatrix);
 template double add(double x, double y);

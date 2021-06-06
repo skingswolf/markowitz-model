@@ -29,20 +29,18 @@ vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<dou
     vector<vector<double> > s = subtractMatrices(b, multiplyMatrices(Q, x)); // s_0 = b - Q*x_0
     vector<vector<double> > p = copyMatrix(s);
 
-    printMatrix(s);
-    cout << "-----------" << endl;
-    printMatrix(p);
-    cout << "-----------" << endl;
+    // printMatrix(s);
+    // cout << "-----------" << endl;
+    // printMatrix(p);
+    // cout << "-----------" << endl;
 
     double alpha = 0;
     double beta = 0;
     double sProduct = calculateSProduct(s); // s^T * s
     double prevSProduct = sProduct;
 
-    cout << "s^T * s: " << sProduct << endl;
-    cout << "-----------" << endl;
-
-    // Temp variables used in conjugate gradient method.
+    // cout << "s^T * s: " << sProduct << endl;
+    // cout << "-----------" << endl;
 
     for (int i = 0; sProduct > toleranceThreshold; i++)
     {
@@ -50,15 +48,27 @@ vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<dou
         cout << "-----------" << endl;
 
         alpha = calculateAlpha(Q, p, sProduct);
-        cout << alpha << endl;
+        cout << "alpha: " << alpha << endl;
         cout << "-----------" << endl;
 
-        // TODO update s first
+        x = updateX(x, p, alpha);
+
+        printMatrix(x);
+        cout << "-----------" << endl;
+        checkWeights(x, numOfAssets);
+        cout << "-----------" << endl;
+
+        s = updateS(s, Q, p, alpha);
+        prevSProduct = sProduct;
+        sProduct = calculateSProduct(s);
+
         beta = calculateBeta(sProduct, prevSProduct);
+
         cout << beta << endl;
         cout << "-----------" << endl;
 
-        prevSProduct = sProduct;
+        p = updateP(s, p, beta);
+
         break;
     }
     // printMatrix(sProduct);
@@ -88,6 +98,59 @@ vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<dou
 /***************** Private Methods *****************/
 
 /**
+ * Updates the column vector p.
+ * 
+ * Dimensions: (no_of_assets + 2) x 1
+ * 
+ * @param s - The column vector s.
+ * @param p - The column vector s.
+ * @param beta - The scalar value beta.
+ * @return The updated column vector p.
+ **/
+vector<vector<double> > MarkowitzModel::updateP(vector<vector<double> > &s, vector<vector<double> > &p, double beta)
+{
+    vector<vector<double> > betaP = multiplyMatrixWithConstant(p, beta);
+
+    return addMatrices(s, betaP);
+}
+
+/**
+ * Updates the column vector s.
+ * 
+ * Dimensions: (no_of_assets + 2) x 1
+ * 
+ * @param s - The column vector s.
+ * @param Q - The matrix Q.
+ * @param p - The column vector s.
+ * @param alpha - The scalar value alpha.
+ * @return The updated column vector x.
+ **/
+vector<vector<double> > MarkowitzModel::updateS(vector<vector<double> > &s, vector<vector<double> > &Q, vector<vector<double> > &p, double alpha)
+{
+    vector<vector<double> > Qp = multiplyMatrices(Q, p);
+    vector<vector<double> > alphaQp = multiplyMatrixWithConstant(Qp, alpha);
+
+    return subtractMatrices(s, alphaQp);
+}
+
+/**
+ * Updates the column vector x.
+ * 
+ * Dimensions: (no_of_assets + 2) x 1
+ * 
+ * @param x - The column vector x.
+ * @param p - The matrix p.
+ * @param alpha - The scalar value alpha.
+ * @return The updated column vector x.
+ **/
+vector<vector<double> > MarkowitzModel::updateX(vector<vector<double> > &x, vector<vector<double> > &p, double alpha)
+{
+    vector<vector<double> > alphaP = multiplyMatrixWithConstant(p, alpha);
+
+    return addMatrices(x, alphaP);
+}
+
+/**
  * Calculate the beta in the conjugate gradient method.
  * 
  * @param sProduct - the scalar value s_{k+1}^T * s_{k+1}.
@@ -111,8 +174,9 @@ double MarkowitzModel::calculateAlpha(vector<vector<double> > &Q, vector<vector<
 {
     vector<vector<double> > pTranspose = getMatrixTranspose(p);
     vector<vector<double> > Qp = multiplyMatrices(Q, p);
+    double denominator = multiplyMatrices(pTranspose, Qp)[0][0];
 
-    return multiplyMatrices(pTranspose, Qp)[0][0]; // s^T * s
+    return sProduct / denominator;
 }
 
 /**

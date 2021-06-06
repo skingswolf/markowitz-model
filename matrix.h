@@ -48,13 +48,13 @@ template <typename T>
 vector<vector<T> > getMatrixTranspose(vector<vector<T> > &matrix);
 
 /**
- * Multiplies each element in a matrix with a constant. Modifies matrix inplace.
+ * Multiplies each element in a matrix with a constant.
  * 
  * @param matrix - The matrix to which each element will be multiplied with the constant.
  * @param scalarFunction - The scalar function.
  **/
 template <typename T>
-void multiplyMatrixWithConstant(vector<vector<T> > &matrix, T constant);
+vector<vector<T> > multiplyMatrixWithConstant(vector<vector<T> > &matrix, T constant);
 
 /**
  * Adds the two given matrices together. 

@@ -1,12 +1,5 @@
 #include "utils.h"
 
-int main(int argc, char *argv[])
-{
-    cout << "foo" << endl;
-
-    return 0;
-}
-
 /**
  * Given a vector of returns, this function calculates and returns the covariance matrix.
  * The start and end index parameters denote the (inclusive) range of returns

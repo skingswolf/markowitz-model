@@ -16,7 +16,7 @@ using namespace std;
  * @param s - The string to be converted into a double.
  * @return The newly cast double, or 0 if `s` didn't correspond to a string.
  **/
-double stringToDouble(const std::string &s);
+double stringToDouble(const string &s);
 
 /**
  * Reads the asset returns from the file corresponding to `fileName` into

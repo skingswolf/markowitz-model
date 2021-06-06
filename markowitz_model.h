@@ -43,6 +43,21 @@ private:
     const double toleranceThreshold = 0.000001;
 
     /**
+     * Calculate the matrix Q. Consists of the covariance matrix,
+     * the asset mean returns and vectors of 1.
+     *
+     * Dimensions: (no_of_assets + 2) x (no_of_assets + 2)
+     * 
+     * @param meanReturns - The mean returns vector.
+     * @param returnsMatrix - The matrix of time-indexed returns.
+     * @param returnsStartIdx - The "first day" of the sample of returns.
+     * @param returnsEndIdx - The "last day" of the sample of returns.
+     * @param numOfAssets - The number of assets in scope.
+     * @return The column vector of mean returns.
+     **/
+    vector<vector<double> > calculateQ(const vector<vector<double> > &meanReturns, const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx, int numOfAssets);
+
+    /**
      * Initialise the column vector x. Consists of the initial, equal
      * weights and then the lagrange multipliers.
      * 
@@ -55,7 +70,7 @@ private:
     vector<vector<double> > initialiseX(const vector<vector<double> > &weights, int numOfAssets);
 
     /**
-     * Initialise the column vector b. Consists of the zeroes and then
+     * Calculate column vector b. Consists of the zeroes and then
      * the negatives of the target return and the number one.
      * 
      * Dimensions: (no_of_assets + 2) x 1
@@ -65,7 +80,7 @@ private:
      * @param targetReturn - The target return of the optimised portfolio.
      * @return The column vector b.
      **/
-    vector<vector<double> > initialiseB(int numOfAssets, double targetReturn);
+    vector<vector<double> > calculateB(int numOfAssets, double targetReturn);
 
     /**
      * Returns a column vector of mean returns corresponding to the time period.
@@ -75,7 +90,7 @@ private:
      * @param returnsEndIdx - The "last day" of the sample of returns.
      * @return The column vector of mean returns.
      **/
-    vector<vector<double> > calculateMeanReturnsVector(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx);
+    vector<vector<double> > calculateMeanReturns(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx);
 
     /**
      * Debugging method for checking that outputted portfolio 

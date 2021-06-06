@@ -19,22 +19,37 @@ vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<dou
     cout << "number of Assets: " << numOfAssets << endl;
     vector<vector<double> > weights = initialisePortfolioWeights(numOfAssets);
 
+    double alpha, beta;
+    double sTransposeTimesS = 0; // 1.79769e+308
+
+    for (int i = 0; sTransposeTimesS > toleranceThreshold; i++)
+    {
+        break;
+    }
+
     cout << targetReturn << endl;
 
     printMatrix(returnsMatrix);
     cout << "-----------" << endl;
 
-    // vector<vector<double> > covarianceMatrix = estimateCovarianceMatrix(returnsMatrix, returnsStartIdx, returnsEndIdx);
+    vector<vector<double> > covarianceMatrix = estimateCovarianceMatrix(returnsMatrix, returnsStartIdx, returnsEndIdx);
+    printMatrix(covarianceMatrix);
+    cout << "-----------" << endl;
     // vector<vector<double> > qPartOne = multiplyMatrices(covarianceMatrix, weights);
 
-    // vector<vector<double> > meanReturns = calculateMeanReturnsVector(returnsMatrix, returnsStartIdx, returnsEndIdx);
-    // printMatrix(meanReturns);
+    vector<vector<double> > meanReturns = calculateMeanReturns(returnsMatrix, returnsStartIdx, returnsEndIdx);
+    printMatrix(meanReturns);
+    cout << "-----------" << endl;
 
     vector<vector<double> > x = initialiseX(weights, numOfAssets);
-    vector<vector<double> > b = initialiseB(numOfAssets, targetReturn);
-    printMatrix(x);
+    vector<vector<double> > b = calculateB(numOfAssets, targetReturn);
+    // printMatrix(x);
+    // cout << "-----------" << endl;
+    // printMatrix(b);
+
+    vector<vector<double> > Q = calculateQ(meanReturns, returnsMatrix, returnsStartIdx, returnsEndIdx, numOfAssets);
+    printMatrix(Q);
     cout << "-----------" << endl;
-    printMatrix(b);
 
     vector<double> portfolioWeights = convertFromColumnToRowVector(weights);
     // cout << sumPortfolioWeights(portfolioWeights) << endl;
@@ -44,6 +59,63 @@ vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<dou
 }
 
 /***************** Private Methods *****************/
+
+/**
+ * Calculate the matrix Q. Consists of the covariance matrix,
+ * the asset mean returns and vectors of 1.
+ *
+ * Dimensions: (no_of_assets + 2) x (no_of_assets + 2)
+ * 
+ * @param meanReturns - The mean returns vector.
+ * @param returnsMatrix - The matrix of time-indexed returns.
+ * @param returnsStartIdx - The "first day" of the sample of returns.
+ * @param returnsEndIdx - The "last day" of the sample of returns.
+ * @param numOfAssets - The number of assets in scope.
+ * @return The column vector of mean returns.
+ **/
+vector<vector<double> > MarkowitzModel::calculateQ(const vector<vector<double> > &meanReturns, const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx, int numOfAssets)
+{
+    int rank = numOfAssets + 2;
+
+    vector<vector<double> > Q;
+    Q.resize(rank);
+
+    vector<vector<double> > covarianceMatrix = estimateCovarianceMatrix(returnsMatrix, returnsStartIdx, returnsEndIdx);
+
+    for (int i = 0; i < rank; i++)
+    {
+        vector<double> qRow;
+        qRow.resize(rank);
+
+        for (int j = 0; j < rank; j++)
+        {
+            if (i < numOfAssets && j < numOfAssets)
+            {
+                qRow[j] = covarianceMatrix[i][j];
+            }
+            else if (j == numOfAssets && i < numOfAssets)
+            {
+                qRow[j] = -1 * meanReturns[i][0];
+            }
+            else if (i == numOfAssets && j < numOfAssets)
+            {
+                qRow[j] = -1 * meanReturns[j][0];
+            }
+            else if ((i == numOfAssets + 1 && j < numOfAssets) || (j == numOfAssets + 1 && i < numOfAssets))
+            {
+                qRow[j] = -1;
+            }
+            else
+            {
+                qRow[j] = 0;
+            }
+        }
+
+        Q[i] = qRow;
+    }
+
+    return Q;
+}
 
 /**
  * Initialise the column vector x. Consists of the initial, equal
@@ -86,7 +158,7 @@ vector<vector<double> > MarkowitzModel::initialiseX(const vector<vector<double> 
 }
 
 /**
- * Initialise the column vector b. Consists of the zeroes and then
+ * Calculate the column vector b. Consists of the zeroes and then
  * the negatives of the target return and the number one.
  * 
  * Dimensions: (no_of_assets + 2) x 1
@@ -96,7 +168,7 @@ vector<vector<double> > MarkowitzModel::initialiseX(const vector<vector<double> 
  * @param targetReturn - The target return of the optimised portfolio.
  * @return The column vector b.
  **/
-vector<vector<double> > MarkowitzModel::initialiseB(int numOfAssets, double targetReturn)
+vector<vector<double> > MarkowitzModel::calculateB(int numOfAssets, double targetReturn)
 {
     vector<vector<double> > b;
     int numOfRows = numOfAssets + 2;
@@ -134,7 +206,7 @@ vector<vector<double> > MarkowitzModel::initialiseB(int numOfAssets, double targ
  * @param returnsEndIdx - The "last day" of the sample of returns.
  * @return The column vector of mean returns.
  **/
-vector<vector<double> > MarkowitzModel::calculateMeanReturnsVector(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx)
+vector<vector<double> > MarkowitzModel::calculateMeanReturns(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx)
 {
     int numOfAssets = returnsMatrix.size();
 

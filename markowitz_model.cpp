@@ -50,8 +50,6 @@ vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<dou
         p = updateP(s, p, beta);
     }
 
-    vector<double> portfolioWeights = parseOutWeights(x, numOfAssets);
-
     return parseOutWeights(x, numOfAssets);
 }
 

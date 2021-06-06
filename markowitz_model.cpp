@@ -16,7 +16,6 @@
 vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx, double targetReturn)
 {
     int numOfAssets = returnsMatrix.size();
-    cout << "number of Assets: " << numOfAssets << endl;
 
     vector<vector<double> > weights = initialisePortfolioWeights(numOfAssets);
     vector<vector<double> > covarianceMatrix = estimateCovarianceMatrix(returnsMatrix, returnsStartIdx, returnsEndIdx);
@@ -29,70 +28,31 @@ vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<dou
     vector<vector<double> > s = subtractMatrices(b, multiplyMatrices(Q, x)); // s_0 = b - Q*x_0
     vector<vector<double> > p = copyMatrix(s);
 
-    // printMatrix(s);
-    // cout << "-----------" << endl;
-    // printMatrix(p);
-    // cout << "-----------" << endl;
-
     double alpha = 0;
     double beta = 0;
     double sProduct = calculateSProduct(s); // s^T * s
     double prevSProduct = sProduct;
 
-    // cout << "s^T * s: " << sProduct << endl;
-    // cout << "-----------" << endl;
-
+    // Apply Conjugate Gradient Method.
     for (int i = 0; sProduct > toleranceThreshold; i++)
     {
         checkWeights(x, numOfAssets);
         cout << "-----------" << endl;
 
         alpha = calculateAlpha(Q, p, sProduct);
-        cout << "alpha: " << alpha << endl;
-        cout << "-----------" << endl;
-
         x = updateX(x, p, alpha);
-
-        printMatrix(x);
-        cout << "-----------" << endl;
-        checkWeights(x, numOfAssets);
-        cout << "-----------" << endl;
 
         s = updateS(s, Q, p, alpha);
         prevSProduct = sProduct;
         sProduct = calculateSProduct(s);
 
         beta = calculateBeta(sProduct, prevSProduct);
-
-        cout << beta << endl;
-        cout << "-----------" << endl;
-
         p = updateP(s, p, beta);
-
-        break;
     }
-    // printMatrix(sProduct);
-    // cout << "-----------" << endl;
-
-    // printMatrix(s);
-    // cout << "-----------" << endl;
-
-    // cout << "s^T * s: " << sProduct << endl;
-    // printMatrix(sProduct);
-    // cout << "-----------" << endl;
-
-    // printMatrix(Q);
-    // cout << "-----------" << endl;
-
-    // printMatrix(x);
-    // cout << "-----------" << endl;
-    // printMatrix(b);
 
     vector<double> portfolioWeights = parseOutWeights(x, numOfAssets);
-    // checkWeights(portfolioWeights);
-    // printRowVector(portfolioWeights);
 
-    return portfolioWeights;
+    return parseOutWeights(x, numOfAssets);
 }
 
 /***************** Private Methods *****************/

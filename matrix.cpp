@@ -236,6 +236,21 @@ vector<vector<T> > getMatrixTranspose(vector<vector<T> > &matrix)
 }
 
 /**
+ * Converts the given column vector to a row vector.
+ * 
+ * @param columnVector - The column vector to be converted.
+ * @return The row vector.
+ **/
+template <typename T>
+void convertFromColumnToRowVector(vector<vector<T> > &columnVector)
+{
+    for (int i = 0; i < columnVector.size(); i++)
+    {
+        columnVector[i] = columnVector[i][0];
+    }
+}
+
+/**
  * Prints a matrix of generic type "T" to STDOUT.
  * 
  * @param matrix - The matrix to be printed.
@@ -245,7 +260,10 @@ void printMatrix(const vector<vector<T> > &matrix)
 {
     for (int rowIdx = 0; rowIdx < matrix.size(); rowIdx++)
     {
-        printRowVector(matrix[rowIdx]);
+        for (int columnIdx = 0; columnIdx < matrix[rowIdx].size(); columnIdx++)
+        {
+            cout << matrix[rowIdx][columnIdx] << " ";
+        }
 
         cout << endl;
     }
@@ -263,6 +281,8 @@ void printRowVector(const vector<T> &rowVector)
     {
         cout << rowVector[i] << " ";
     }
+
+    cout << endl;
 }
 
 /***************** Explicit Instantiations for use in markowitz_model.cpp *****************/
@@ -277,5 +297,6 @@ template double add(double x, double y);
 template double subtract(double x, double y);
 template vector<vector<double> > applyBinaryOperatorToMatrices(vector<vector<double> > matrix, vector<vector<double> > otherMatrix, double (*operatorFunction)(double, double));
 template vector<vector<double> > getMatrixTranspose(vector<vector<double> > &matrix);
+template void convertFromColumnToRowVector(vector<vector<double> > &columnVector);
 template void printMatrix(const vector<vector<double> > &matrix);
 template void printRowVector(const vector<double> &rowVector);

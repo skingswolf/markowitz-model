@@ -107,6 +107,15 @@ template <typename T>
 vector<vector<T> > applyBinaryOperatorToMatrices(vector<vector<T> > matrix, vector<vector<T> > otherMatrix, T (*operatorFunction)(T, T));
 
 /**
+ * Converts the given column vector to a row vector.
+ * 
+ * @param columnVector - The column vector to be converted.
+ * @return The row vector.
+ **/
+template <typename T>
+void convertFromColumnToRowVector(vector<vector<T> > &columnVector);
+
+/**
  * Prints a matrix of generic type "T" to STDOUT.
  * 
  * @param matrix - The matrix to be printed.

@@ -1,5 +1,5 @@
 #ifndef matrix_h
-#define utils_h
+#define matrix_h
 
 #include <iostream>
 #include <stdio.h>
@@ -112,7 +112,7 @@ vector<vector<T> > applyBinaryOperatorToMatrices(vector<vector<T> > matrix, vect
  * @param matrix - The matrix to be printed.
  **/
 template <typename T>
-void printMatrix(const T &matrix);
+void printMatrix(const vector<vector<T> > &matrix);
 
 /**
  * Prints a row vector of generic type "T" to STDOUT.
@@ -120,6 +120,6 @@ void printMatrix(const T &matrix);
  * @param rowVector - The row vector to be printed.
  **/
 template <typename T>
-void printRowVector(const T &rowVector);
+void printRowVector(const vector<T> &rowVector);
 
 #endif

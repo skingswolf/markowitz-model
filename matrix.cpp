@@ -241,7 +241,7 @@ vector<vector<T> > getMatrixTranspose(vector<vector<T> > &matrix)
  * @param matrix - The matrix to be printed.
  **/
 template <typename T>
-void printMatrix(const T &matrix)
+void printMatrix(const vector<vector<T> > &matrix)
 {
     for (int rowIdx = 0; rowIdx < matrix.size(); rowIdx++)
     {
@@ -257,10 +257,25 @@ void printMatrix(const T &matrix)
  * @param rowVector - The row vector to be printed.
  **/
 template <typename T>
-void printRowVector(const T &rowVector)
+void printRowVector(const vector<T> &rowVector)
 {
     for (int i = 0; i < rowVector.size(); i++)
     {
         cout << rowVector[i] << " ";
     }
 }
+
+/***************** Explicit Instantiations for use in Markowitz model *****************/
+
+template vector<vector<double> > multiplyMatrices(vector<vector<double> > &matrix, vector<vector<double> > &otherMatrix);
+template vector<vector<double> > multiplyMatrices(vector<vector<double> > &matrix, vector<double> &rowVector);
+template vector<vector<double> > multiplyMatrices(vector<double> &rowVector, vector<vector<double> > &otherMatrix);
+template void multiplyMatrixWithConstant(vector<vector<double> > &matrix, double constant);
+template vector<vector<double> > addMatrices(vector<vector<double> > matrix, vector<vector<double> > otherMatrix);
+template vector<vector<double> > subtractMatrices(vector<vector<double> > matrix, vector<vector<double> > otherMatrix);
+template double add(double x, double y);
+template double subtract(double x, double y);
+template vector<vector<double> > applyBinaryOperatorToMatrices(vector<vector<double> > matrix, vector<vector<double> > otherMatrix, double (*operatorFunction)(double, double));
+template vector<vector<double> > getMatrixTranspose(vector<vector<double> > &matrix);
+template void printMatrix(const vector<vector<double> > &matrix);
+template void printRowVector(const vector<double> &rowVector);

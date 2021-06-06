@@ -18,16 +18,8 @@ int main(int argc, char *argv[])
     printMatrix(returnsMatrix);
     cout << "\n-----" << endl;
 
-    vector<double> rowVector;
-    rowVector.resize(4); // Allocate memory for output matrix.
-
-    for (int i = 0; i < 4; i++)
-    {
-        rowVector[i] = i + 1;
-    }
-
-    printRowVector(rowVector);
-    printMatrix(multiplyMatrices(rowVector, returnsMatrix));
+    multiplyMatrixWithConstant(returnsMatrix, 1. / 2);
+    printMatrix(returnsMatrix);
 
     return 0;
 }
@@ -136,6 +128,27 @@ void applyScalarFunctionToMatrix(vector<vector<T> > &matrix, T (*scalarFunction)
         for (int j = 0; j < numberOfColumns; j++)
         {
             matrix[i][j] = scalarFunction(matrix[i][j]);
+        }
+    }
+}
+
+/**
+ * Multiplies each element in a matrix with a constant. Modifies matrix inplace.
+ * 
+ * @param matrix - The matrix to which each element will be multiplied with the constant.
+ * @param scalarFunction - The scalar function.
+ **/
+template <typename T>
+void multiplyMatrixWithConstant(vector<vector<T> > &matrix, T constant)
+{
+    int numberOfRows = matrix.size();
+    int numberOfColumns = matrix[0].size();
+
+    for (int i = 0; i < numberOfRows; i++)
+    {
+        for (int j = 0; j < numberOfColumns; j++)
+        {
+            matrix[i][j] = matrix[i][j] * constant;
         }
     }
 }

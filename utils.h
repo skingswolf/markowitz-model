@@ -46,6 +46,15 @@ template <typename T>
 vector<vector<T> > getMatrixTranspose(vector<vector<T> > &matrix);
 
 /**
+ * Multiplies each element in a matrix with a constant. Modifies matrix inplace.
+ * 
+ * @param matrix - The matrix to which each element will be multiplied with the constant.
+ * @param scalarFunction - The scalar function.
+ **/
+template <typename T>
+void multiplyMatrixWithConstant(vector<vector<T> > &matrix, T constant);
+
+/**
  * Applies a scalar function to a matrix. Matrix is modified in place.
  * 
  * @param matrix - The matrix to which a scalar function will be applied.

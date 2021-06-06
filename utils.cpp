@@ -15,14 +15,192 @@ int main(int argc, char *argv[])
     // A matrix to store the return data.
     vector<vector<double> > returnsMatrix = readData(fileName, numberOfAssets, numberOfReturns);
 
-    int returnsStartIdx = 0;
-    int returnsEndIdx = 4;
+    printMatrix(returnsMatrix);
+    cout << "\n-----" << endl;
 
-    vector<vector<double> > covarianceMatrix = estimateCovarianceMatrix(returnsMatrix, returnsStartIdx, returnsEndIdx);
+    vector<double> rowVector;
+    rowVector.resize(4); // Allocate memory for output matrix.
 
-    printMatrix(covarianceMatrix);
+    for (int i = 0; i < 4; i++)
+    {
+        rowVector[i] = i + 1;
+    }
+
+    printRowVector(rowVector);
+    printMatrix(multiplyMatrices(rowVector, returnsMatrix));
 
     return 0;
+}
+
+/**
+ * Returns the result of the multiplication of the two given matrices.
+ * 
+ * @param matrix - The left component in the matrix multiplication.
+ * @param otherMatrix - The right component in the matrix multiplication.
+ * @return The output matrix from the multiplication.
+ **/
+template <typename T>
+vector<vector<T> > multiplyMatrices(vector<vector<T> > &matrix, vector<vector<T> > &otherMatrix)
+{
+    int numberOfMatrixColumns = matrix[0].size();
+    int numberOfOtherMatrixRows = otherMatrix.size();
+
+    // Check if the dimensions of `matrix` and `otherMatrix` are
+    // compatible with each other.
+    if (numberOfMatrixColumns != numberOfOtherMatrixRows)
+    {
+        cout << "Matrix dimensions are not compatible for matrix multiplication." << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    int numberOfRows = matrix.size();
+    int numberOfColumns = otherMatrix[0].size();
+
+    vector<vector<T> > outputMatrix;
+
+    // Allocate memory for output matrix.
+    outputMatrix.resize(numberOfRows);
+
+    for (int i = 0; i < numberOfRows; i++)
+    {
+        outputMatrix[i].resize(numberOfColumns);
+    }
+
+    int numberOfElements = matrix[0].size();
+
+    // Perform matrix multiplication.
+    for (int i = 0; i < numberOfRows; i++)
+    {
+        for (int j = 0; j < numberOfColumns; j++)
+        {
+            outputMatrix[i][j] = 0;
+
+            for (int k = 0; k < numberOfElements; k++)
+            {
+                outputMatrix[i][j] += matrix[i][k] * otherMatrix[k][j];
+            }
+        }
+    }
+
+    return outputMatrix;
+}
+
+/**
+ * Returns the result of the multiplication of the given matrix and row vector.
+ * 
+ * @param matrix - The left component in the matrix multiplication.
+ * @param rowVector - The right component in the matrix multiplication.
+ * @return The output matrix from the multiplication.
+ **/
+template <typename T>
+vector<vector<T> > multiplyMatrices(vector<vector<T> > &matrix, vector<T> &rowVector)
+{
+    vector<vector<T> > otherMatrix;
+    otherMatrix.resize(1);
+    otherMatrix[0] = rowVector;
+
+    return multiplyMatrices(matrix, otherMatrix);
+}
+
+/**
+ * Returns the result of the multiplication of the given row vector and matrix.
+ * 
+ * @param rowVector - The left component in the matrix multiplication.
+ * @param otherMatrix - The right component in the matrix multiplication.
+ * @return The output matrix from the multiplication.
+ **/
+template <typename T>
+vector<vector<T> > multiplyMatrices(vector<T> &rowVector, vector<vector<T> > &otherMatrix)
+{
+    vector<vector<T> > matrix;
+    matrix.resize(1);
+    matrix[0] = rowVector;
+
+    return multiplyMatrices(matrix, otherMatrix);
+}
+
+/**
+ * Applies a scalar function to a matrix. Matrix is modified in place.
+ * 
+ * @param matrix - The matrix to which a scalar function will be applied.
+ * @param scalarFunction - The scalar function.
+ **/
+template <typename T>
+void applyScalarFunctionToMatrix(vector<vector<T> > &matrix, T (*scalarFunction)(T))
+{
+    int numberOfRows = matrix.size();
+    int numberOfColumns = matrix[0].size();
+
+    for (int i = 0; i < numberOfRows; i++)
+    {
+        for (int j = 0; j < numberOfColumns; j++)
+        {
+            matrix[i][j] = scalarFunction(matrix[i][j]);
+        }
+    }
+}
+
+/**
+ * Returns the transpose of the given matrix.
+ * 
+ * @param matrix - The matrix to be transposed.
+ * @return The transpose of the matrix.
+ **/
+template <typename T>
+vector<vector<T> > getMatrixTranspose(vector<vector<T> > &matrix)
+{
+    int numberOfRows = matrix[0].size();
+    int numberOfColumns = matrix.size();
+
+    vector<vector<T> > matrixTranspose;
+
+    // Allocate memory for transposedMatrix.
+    matrixTranspose.resize(numberOfRows);
+
+    for (int i = 0; i < numberOfRows; i++)
+    {
+        matrixTranspose[i].resize(numberOfColumns);
+    }
+
+    for (int i = 0; i < numberOfRows; i++)
+    {
+        for (int j = 0; j < numberOfColumns; j++)
+        {
+            matrixTranspose[i][j] = matrix[j][i];
+        }
+    }
+
+    return matrixTranspose;
+}
+
+/**
+ * Prints a matrix of generic type "T" to STDOUT.
+ * 
+ * @param matrix - The matrix to be printed.
+ **/
+template <typename T>
+void printMatrix(const T &matrix)
+{
+    for (int rowIdx = 0; rowIdx < matrix.size(); rowIdx++)
+    {
+        printRowVector(matrix[rowIdx]);
+
+        cout << endl;
+    }
+}
+
+/**
+ * Prints a row vector of generic type "T" to STDOUT.
+ * 
+ * @param rowVector - The row vector to be printed.
+ **/
+template <typename T>
+void printRowVector(const T &rowVector)
+{
+    for (int i = 0; i < rowVector.size(); i++)
+    {
+        cout << rowVector[i] << " ";
+    }
 }
 
 /**
@@ -115,34 +293,4 @@ double calculateMeanReturn(const vector<vector<double> > &returnsMatrix, int ass
     }
 
     return meanReturn / numberOfReturns;
-}
-
-/**
- * Prints a matrix of generic type "T" to STDOUT.
- * 
- * @param matrix - The matrix to be printed.
- **/
-template <typename T>
-void printMatrix(const T &matrix)
-{
-    for (int rowIdx = 0; rowIdx < matrix.size(); rowIdx++)
-    {
-        printRowVector(matrix[rowIdx]);
-
-        cout << endl;
-    }
-}
-
-/**
- * Prints a row vector of generic type "T" to STDOUT.
- * 
- * @param rowVector - The row vector to be printed.
- **/
-template <typename T>
-void printRowVector(const T &rowVector)
-{
-    for (int i = 0; i < rowVector.size(); i++)
-    {
-        cout << rowVector[i] << " ";
-    }
 }

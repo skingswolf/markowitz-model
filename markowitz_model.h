@@ -43,6 +43,15 @@ private:
     const double toleranceThreshold = 0.000001;
 
     /**
+     * Calculate the beta in the conjugate gradient method.
+     * 
+     * @param sProduct - the scalar value s_{k+1}^T * s_{k+1}.
+     * @param prevSProduct - the scalar value s_{k}^T * s_{k}.
+     * @return The scalar value beta.
+     **/
+    double calculateBeta(double sProduct, double prevSProduct);
+
+    /**
      * Calculate the alpha in the conjugate gradient method.
      * 
      * @param Q - The matrix Q.

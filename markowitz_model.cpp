@@ -47,8 +47,12 @@ vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<dou
     for (int i = 0; sProduct > toleranceThreshold; i++)
     {
         alpha = calculateAlpha(Q, p, sProduct);
-
         cout << alpha << endl;
+        cout << "-----------" << endl;
+
+        // TODO update s first
+        beta = calculateBeta(sProduct, prevSProduct);
+        cout << beta << endl;
         cout << "-----------" << endl;
 
         prevSProduct = sProduct;
@@ -79,6 +83,18 @@ vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<dou
 }
 
 /***************** Private Methods *****************/
+
+/**
+ * Calculate the beta in the conjugate gradient method.
+ * 
+ * @param sProduct - the scalar value s_{k+1}^T * s_{k+1}.
+ * @param prevSProduct - the scalar value s_{k}^T * s_{k}.
+ * @return The scalar value beta.
+ **/
+double MarkowitzModel::calculateBeta(double sProduct, double prevSProduct)
+{
+    return sProduct / prevSProduct;
+}
 
 /**
  * Calculate the alpha in the conjugate gradient method.

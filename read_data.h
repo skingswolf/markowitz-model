@@ -8,6 +8,8 @@
 #include <vector>
 #include "csv.h"
 
+using namespace std;
+
 /**
  * Casts a string to a double.
  * 

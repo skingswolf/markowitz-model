@@ -1,8 +1,6 @@
 
 #include "read_data.h"
 
-using namespace std;
-
 /**
  * Main function here purely included to allow for debugging read data
  * functions in this file. 

@@ -26,8 +26,8 @@ vector<vector<T> > multiplyMatrices(vector<vector<T> > &matrix, vector<vector<T>
  * @return The output matrix from the multiplication.
  **/
 template <typename T>
-vector<vector<T> > multiplyMatrices(vector<vector<T> > &matrix, vector<T> &rowVector);
 
+vector<vector<T> > multiplyMatrices(vector<vector<T> > &matrix, vector<T> &rowVector);
 /**
  * Returns the result of the multiplication of the given row vector and matrix.
  * 
@@ -113,7 +113,16 @@ vector<vector<T> > applyBinaryOperatorToMatrices(vector<vector<T> > matrix, vect
  * @return The row vector.
  **/
 template <typename T>
-vector<T> convertFromColumnToRowVector(const vector<vector<T> > &columnVector);
+vector<T> convertFromColumnToRowVector(vector<vector<T> > &columnVector);
+
+/**
+ * Returns a copy of the given matrix.
+ * 
+ * @param matrix - The matrix to be copied.
+ * @return The copy of the matrix.
+ **/
+template <typename T>
+vector<vector<T> > copyMatrix(vector<vector<T> > &matrix);
 
 /**
  * Prints a matrix of generic type "T" to STDOUT.
@@ -121,7 +130,7 @@ vector<T> convertFromColumnToRowVector(const vector<vector<T> > &columnVector);
  * @param matrix - The matrix to be printed.
  **/
 template <typename T>
-void printMatrix(const vector<vector<T> > &matrix);
+void printMatrix(vector<vector<T> > &matrix);
 
 /**
  * Prints a row vector of generic type "T" to STDOUT.
@@ -129,6 +138,6 @@ void printMatrix(const vector<vector<T> > &matrix);
  * @param rowVector - The row vector to be printed.
  **/
 template <typename T>
-void printRowVector(const vector<T> &rowVector);
+void printRowVector(vector<T> &rowVector);
 
 #endif

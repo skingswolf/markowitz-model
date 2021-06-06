@@ -242,7 +242,7 @@ vector<vector<T> > getMatrixTranspose(vector<vector<T> > &matrix)
  * @return The row vector.
  **/
 template <typename T>
-vector<T> convertFromColumnToRowVector(const vector<vector<T> > &columnVector)
+vector<T> convertFromColumnToRowVector(vector<vector<T> > &columnVector)
 {
     int numOfElements = columnVector.size();
     vector<T> rowVector;
@@ -257,12 +257,42 @@ vector<T> convertFromColumnToRowVector(const vector<vector<T> > &columnVector)
 }
 
 /**
+ * Returns a copy of the given matrix.
+ * 
+ * @param matrix - The matrix to be copied.
+ * @return The copy of the matrix.
+ **/
+template <typename T>
+vector<vector<T> > copyMatrix(vector<vector<T> > &matrix)
+{
+    int numberOfRows = matrix.size();
+    int numberOfColumns = matrix[0].size();
+
+    vector<vector<T> > outputMatrix;
+
+    // Allocate memory for transposedMatrix.
+    outputMatrix.resize(numberOfRows);
+
+    for (int i = 0; i < numberOfRows; i++)
+    {
+        outputMatrix[i].resize(numberOfColumns);
+
+        for (int j = 0; j < numberOfColumns; j++)
+        {
+            outputMatrix[i][j] = matrix[i][j];
+        }
+    }
+
+    return outputMatrix;
+}
+
+/**
  * Prints a matrix of generic type "T" to STDOUT.
  * 
  * @param matrix - The matrix to be printed.
  **/
 template <typename T>
-void printMatrix(const vector<vector<T> > &matrix)
+void printMatrix(vector<vector<T> > &matrix)
 {
     for (int rowIdx = 0; rowIdx < matrix.size(); rowIdx++)
     {
@@ -281,7 +311,7 @@ void printMatrix(const vector<vector<T> > &matrix)
  * @param rowVector - The row vector to be printed.
  **/
 template <typename T>
-void printRowVector(const vector<T> &rowVector)
+void printRowVector(vector<T> &rowVector)
 {
     for (int i = 0; i < rowVector.size(); i++)
     {
@@ -303,6 +333,7 @@ template double add(double x, double y);
 template double subtract(double x, double y);
 template vector<vector<double> > applyBinaryOperatorToMatrices(vector<vector<double> > matrix, vector<vector<double> > otherMatrix, double (*operatorFunction)(double, double));
 template vector<vector<double> > getMatrixTranspose(vector<vector<double> > &matrix);
-template vector<double> convertFromColumnToRowVector(const vector<vector<double> > &columnVector);
-template void printMatrix(const vector<vector<double> > &matrix);
-template void printRowVector(const vector<double> &rowVector);
+template vector<double> convertFromColumnToRowVector(vector<vector<double> > &columnVector);
+template vector<vector<double> > copyMatrix(vector<vector<double> > &matrix);
+template void printMatrix(vector<vector<double> > &matrix);
+template void printRowVector(vector<double> &rowVector);

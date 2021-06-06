@@ -17,17 +17,17 @@ vector<vector<double> > estimateCovarianceMatrix(const vector<vector<double> > &
     double numberOfDays = returnsEndIdx + 1 - returnsStartIdx;
 
     // Number of rows and columns respectively.
-    int numberOfAssets = returnsMatrix.size();
+    int numOfAssets = returnsMatrix.size();
 
     // A matrix to store the return data. The mean return at index i corresponds to
     // the average of the returns bounded by `returnsStartIdx` and `returnsEndIdx`.
     vector<double> meanReturns;
-    meanReturns.resize(numberOfAssets);
+    meanReturns.resize(numOfAssets);
 
     // Populate mean returns vector. The entry at index `assetIdx`
     // in the vector corresponds to the average return of the returns
     // bounded by the indices `returnsStartIdx` and `returnsEndIdx`;
-    for (int assetIdx = 0; assetIdx < numberOfAssets; assetIdx++)
+    for (int assetIdx = 0; assetIdx < numOfAssets; assetIdx++)
     {
         meanReturns[assetIdx] = calculateMeanReturn(returnsMatrix, assetIdx, returnsStartIdx, returnsEndIdx);
     }
@@ -36,20 +36,20 @@ vector<vector<double> > estimateCovarianceMatrix(const vector<vector<double> > &
     vector<vector<double> > covarianceMatrix;
 
     // Allocate memory for covariance data.
-    covarianceMatrix.resize(numberOfAssets);
+    covarianceMatrix.resize(numOfAssets);
 
-    for (int i = 0; i < numberOfAssets; i++)
+    for (int i = 0; i < numOfAssets; i++)
     {
-        covarianceMatrix[i].resize(numberOfAssets);
+        covarianceMatrix[i].resize(numOfAssets);
     }
 
     // Temporary variables used in covariance calculation.
     double sumOfMeanDeviationProducts, productOfMeanDeviations;
 
     // Populate covariance matrix.
-    for (int i = 0; i < numberOfAssets; i++)
+    for (int i = 0; i < numOfAssets; i++)
     {
-        for (int j = 0; j < numberOfAssets; j++)
+        for (int j = 0; j < numOfAssets; j++)
         {
             sumOfMeanDeviationProducts = 0;
 
@@ -81,13 +81,13 @@ vector<vector<double> > estimateCovarianceMatrix(const vector<vector<double> > &
 double calculateMeanReturn(const vector<vector<double> > &returnsMatrix, int assetIdx, int returnsStartIdx, int returnsEndIdx)
 {
     double meanReturn = 0;
-    double numberOfReturns = 0;
+    double numOfReturns = 0;
 
     for (int returnsIdx = returnsStartIdx; returnsIdx <= returnsEndIdx; returnsIdx++)
     {
         meanReturn += returnsMatrix[assetIdx][returnsIdx];
-        numberOfReturns += 1;
+        numOfReturns += 1;
     }
 
-    return meanReturn / numberOfReturns;
+    return meanReturn / numOfReturns;
 }

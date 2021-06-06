@@ -24,7 +24,7 @@ public:
      * @param targetReturn - The desired return to be attained by the optimal portfolio.
      * @return The optimal portfolio weights.
      **/
-    virtual vector<double> calculatePortfolioWeights(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx, int targetReturn) = 0;
+    virtual vector<double> calculatePortfolioWeights(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx, double targetReturn) = 0;
 };
 
 #endif

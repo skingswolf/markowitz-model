@@ -27,11 +27,11 @@ double stringToDouble(const string &s)
  * the `data` array.
  * 
  * @param fileName The name of the file to read the asset returns from.
- * @param numberOfAssets - The number of rows to read from the CSV file.
- * @param numberOfReturns - The number of columns to read from the CSV file.
+ * @param numOfAssets - The number of rows to read from the CSV file.
+ * @param numOfReturns - The number of columns to read from the CSV file.
  * @return A vector of vectors representing the returns matrix.
  **/
-vector<vector<double> > readData(const string &fileName, int numberOfAssets, int numberOfReturns)
+vector<vector<double> > readData(const string &fileName, int numOfAssets, int numOfReturns)
 {
     char tmp[20];
     ifstream file(strcpy(tmp, fileName.c_str()));
@@ -48,12 +48,12 @@ vector<vector<double> > readData(const string &fileName, int numberOfAssets, int
     // A matrix to store the return data.
     vector<vector<double> > returnsMatrix;
 
-    returnsMatrix.resize(numberOfAssets);
+    returnsMatrix.resize(numOfAssets);
 
     // Allocate memory for return data.
-    for (int i = 0; i < numberOfAssets; i++)
+    for (int i = 0; i < numOfAssets; i++)
     {
-        returnsMatrix[i].resize(numberOfReturns, -1);
+        returnsMatrix[i].resize(numOfReturns, -1);
     }
 
     // Read through the file line by line, reading return values into returns matrix.

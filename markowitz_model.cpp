@@ -13,20 +13,28 @@
  * @param targetReturn - The desired return to be attained by the optimal portfolio.
  * @return The optimal portfolio weights.
  **/
-vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx, int targetReturn)
+vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx, double targetReturn)
 {
-    int numberOfAssets = returnsMatrix.size();
-    cout << "number of Assets: " << numberOfAssets << endl;
-    vector<vector<double> > weights = initialisePortfolioWeights(numberOfAssets);
+    int numOfAssets = returnsMatrix.size();
+    cout << "number of Assets: " << numOfAssets << endl;
+    vector<vector<double> > weights = initialisePortfolioWeights(numOfAssets);
+
+    cout << targetReturn << endl;
 
     printMatrix(returnsMatrix);
     cout << "-----------" << endl;
 
-    vector<vector<double> > covarianceMatrix = estimateCovarianceMatrix(returnsMatrix, returnsStartIdx, returnsEndIdx);
-    vector<vector<double> > qPartOne = multiplyMatrices(covarianceMatrix, weights);
+    // vector<vector<double> > covarianceMatrix = estimateCovarianceMatrix(returnsMatrix, returnsStartIdx, returnsEndIdx);
+    // vector<vector<double> > qPartOne = multiplyMatrices(covarianceMatrix, weights);
 
-    vector<vector<double> > meanReturns = calculateMeanReturnsVector(returnsMatrix, returnsStartIdx, returnsEndIdx);
-    printMatrix(meanReturns);
+    // vector<vector<double> > meanReturns = calculateMeanReturnsVector(returnsMatrix, returnsStartIdx, returnsEndIdx);
+    // printMatrix(meanReturns);
+
+    vector<vector<double> > x = initialiseX(weights, numOfAssets);
+    vector<vector<double> > b = initialiseB(numOfAssets, targetReturn);
+    printMatrix(x);
+    cout << "-----------" << endl;
+    printMatrix(b);
 
     vector<double> portfolioWeights = convertFromColumnToRowVector(weights);
     // cout << sumPortfolioWeights(portfolioWeights) << endl;
@@ -43,11 +51,38 @@ vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<dou
  * 
  * Dimensions: (no_of_assets + 2) x 1
  * 
- * @param numberOfAssets - The number of assets in scope.
+ * @param weights - The portfolio weights.
+ * @param numOfAssets - The number of assets in scope.
  * @return The column vector x.
  **/
-vector<vector<double> > initialiseX(int numberOfAssets)
+vector<vector<double> > MarkowitzModel::initialiseX(const vector<vector<double> > &weights, int numOfAssets)
 {
+    vector<vector<double> > x;
+    int numOfRows = numOfAssets + 2;
+    x.resize(numOfRows);
+
+    for (int i = 0; i < numOfRows; i++)
+    {
+        vector<double> xRow;
+        xRow.resize(1);
+
+        if (i == numOfAssets)
+        {
+            xRow[0] = lagrangeMultiplierOne;
+        }
+        else if (i == numOfAssets + 1)
+        {
+            xRow[0] = lagrangeMultiplierTwo;
+        }
+        else
+        {
+            xRow[0] = weights[i][0];
+        }
+
+        x[i] = xRow;
+    }
+
+    return x;
 }
 
 /**
@@ -57,24 +92,38 @@ vector<vector<double> > initialiseX(int numberOfAssets)
  * Dimensions: (no_of_assets + 2) x 1
  * 
  * @param weights - The portfolio weights.
- * @param numberOfAssets - The number of assets in scope.
+ * @param numOfAssets - The number of assets in scope.
+ * @param targetReturn - The target return of the optimised portfolio.
  * @return The column vector b.
  **/
-vector<vector<double> > initialiseB(const vector<vector<double> > &weights, int numberOfAssets)
+vector<vector<double> > MarkowitzModel::initialiseB(int numOfAssets, double targetReturn)
 {
     vector<vector<double> > b;
-    int numOfRows =
-        b.resize(numberOfAssets + 2);
+    int numOfRows = numOfAssets + 2;
+    b.resize(numOfRows);
 
-    for (int i = 0; i < numberOfAssets + 2; i++)
+    for (int i = 0; i < numOfRows; i++)
     {
-        vector<double> meanReturn;
-        meanReturn.resize(1);
-        meanReturn[0] = weights[0][i];
-        meanReturns[i] = meanReturn;
+        vector<double> bRow;
+        bRow.resize(1);
+
+        if (i == numOfAssets)
+        {
+            bRow[0] = -1 * targetReturn;
+        }
+        else if (i == numOfAssets + 1)
+        {
+            bRow[0] = -1;
+        }
+        else
+        {
+            bRow[0] = 0;
+        }
+
+        b[i] = bRow;
     }
 
-    return meanReturns;
+    return b;
 }
 
 /**
@@ -87,12 +136,12 @@ vector<vector<double> > initialiseB(const vector<vector<double> > &weights, int 
  **/
 vector<vector<double> > MarkowitzModel::calculateMeanReturnsVector(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx)
 {
-    int numberOfAssets = returnsMatrix.size();
+    int numOfAssets = returnsMatrix.size();
 
     vector<vector<double> > meanReturns;
-    meanReturns.resize(numberOfAssets);
+    meanReturns.resize(numOfAssets);
 
-    for (int i = 0; i < numberOfAssets; i++)
+    for (int i = 0; i < numOfAssets; i++)
     {
         vector<double> meanReturn;
         meanReturn.resize(1);
@@ -126,17 +175,17 @@ double MarkowitzModel::sumPortfolioWeights(vector<double> &portfolioWeights)
  * Given the number of assets in scope, this function initialises
  * the portfolio such that it is equally weighted.
  * 
- * @param numberOfAssets - The number of assets in scope.
+ * @param numOfAssets - The number of assets in scope.
  * @return The equally weighted portfolio in the form of a column vector.
  **/
-vector<vector<double> > MarkowitzModel::initialisePortfolioWeights(int numberOfAssets)
+vector<vector<double> > MarkowitzModel::initialisePortfolioWeights(int numOfAssets)
 {
-    double equalWeight = 1. / numberOfAssets;
+    double equalWeight = 1. / numOfAssets;
     vector<vector<double> > weights;
 
-    weights.resize(numberOfAssets);
+    weights.resize(numOfAssets);
 
-    for (int i = 0; i < numberOfAssets; i++)
+    for (int i = 0; i < numOfAssets; i++)
     {
         vector<double> weight;
         weight.resize(1);

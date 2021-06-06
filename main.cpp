@@ -7,19 +7,19 @@ using namespace std;
 int main()
 {
     // string fileName = "asset_returns.csv";
-    // int numberOfAssets = 83;
-    // int numberOfReturns = 700;
+    // int numOfAssets = 83;
+    // int numOfReturns = 700;
 
     // string fileName = "asset_returns_small.csv";
-    // int numberOfAssets = 5;
-    // int numberOfReturns = 10;
+    // int numOfAssets = 5;
+    // int numOfReturns = 10;
 
     string fileName = "dummy_returns.csv";
-    int numberOfAssets = 4;
-    int numberOfReturns = 5;
+    int numOfAssets = 4;
+    int numOfReturns = 5;
 
     // A matrix to store the return data.
-    vector<vector<double> > returnMatrix = readData(fileName, numberOfAssets, numberOfReturns);
+    vector<vector<double> > returnMatrix = readData(fileName, numOfAssets, numOfReturns);
 
     MarkowitzModel model;
     double targetReturn = 0.005;

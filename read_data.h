@@ -23,10 +23,10 @@ double stringToDouble(const string &s);
  * the `data` array.
  * 
  * @param fileName The name of the file to read the asset returns from.
- * @param numberOfAssets - The number of rows to read from the CSV file.
- * @param numberOfReturns - The number of columns to read from the CSV file.
+ * @param numOfAssets - The number of rows to read from the CSV file.
+ * @param numOfReturns - The number of columns to read from the CSV file.
  * @return A vector of vectors representing the returns matrix.
  **/
-vector<vector<double> > readData(const string &fileName, int numberOfAssets, int numberOfReturns);
+vector<vector<double> > readData(const string &fileName, int numOfAssets, int numOfReturns);
 
 #endif

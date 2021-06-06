@@ -32,7 +32,7 @@ public:
      * @param targetReturn - The desired return to be attained by the optimal portfolio.
      * @return The optimal portfolio weights.
      **/
-    vector<double> calculatePortfolioWeights(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx, int targetReturn);
+    vector<double> calculatePortfolioWeights(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx, double targetReturn);
 
 private:
     // Constants used in the lagrange optimisation.
@@ -48,10 +48,11 @@ private:
      * 
      * Dimensions: (no_of_assets + 2) x 1
      * 
-     * @param numberOfAssets - The number of assets in scope.
+     * @param weights - The portfolio weights.
+     * @param numOfAssets - The number of assets in scope.
      * @return The column vector x.
      **/
-    vector<vector<double> > initialiseX(int numberOfAssets);
+    vector<vector<double> > initialiseX(const vector<vector<double> > &weights, int numOfAssets);
 
     /**
      * Initialise the column vector b. Consists of the zeroes and then
@@ -59,10 +60,12 @@ private:
      * 
      * Dimensions: (no_of_assets + 2) x 1
      * 
-     * @param numberOfAssets - The number of assets in scope.
+     * @param weights - The portfolio weights.
+     * @param numOfAssets - The number of assets in scope.
+     * @param targetReturn - The target return of the optimised portfolio.
      * @return The column vector b.
      **/
-    vector<vector<double> > initialiseB(int numberOfAssets);
+    vector<vector<double> > initialiseB(int numOfAssets, double targetReturn);
 
     /**
      * Returns a column vector of mean returns corresponding to the time period.
@@ -87,10 +90,10 @@ private:
      * Given the number of assets in scope, this function initialises
      * the portfolio such that it is equally weighted.
      * 
-     * @param numberOfAssets - The number of assets in scope.
+     * @param numOfAssets - The number of assets in scope.
      * @return The equally weighted portfolio in the form of a column vector.
      **/
-    vector<vector<double> > initialisePortfolioWeights(int numberOfAssets);
+    vector<vector<double> > initialisePortfolioWeights(int numOfAssets);
 };
 
 #endif

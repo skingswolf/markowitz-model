@@ -1,22 +1,23 @@
 CXX=g++
-CXXFLAGS = -Wall -g
+CXXFLAGS = -Wall -g -Wc++11-extensions
 
 
 csv.o: csv.h
 
-read_data.o: read_data.h csv.h
+read_data.o: read_data.h
 
-utils.o: read_data.h utils.h
+utils.o: utils.h
 
 matrix.o: matrix.h
 
-read_data: csv.o read_data.o
-	$(CXX) -o read_data read_data.o csv.o $(CXXFLAGS)
+markowitz_model.o: matrix.h markowitz_model.h portfolio_optimisation_model.h utils.h matrix.h
 
-utils: utils.o read_data.o csv.o
-	$(CXX) -o utils utils.o read_data.o csv.o $(CXXFLAGS)
+main.o: markowitz_model.h read_data.h
+	g++ -c main.cpp
 
+main: main.o markowitz_model.o matrix.o utils.o read_data.o csv.o
+	$(CXX) -o main main.o markowitz_model.o matrix.o utils.o read_data.o csv.o $(CXXFLAGS)
 
 .PHONY: clean
 clean:
-	rm -r *.o read_data utils matrix
+	rm -r *.o read_data utils matrix main markowitz_model

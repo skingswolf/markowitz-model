@@ -1,5 +1,6 @@
 #include "markowitz_model.h"
 #include "read_data.h"
+#include "matrix.h"
 
 using namespace std;
 
@@ -23,7 +24,7 @@ int main()
     MarkowitzModel model;
     double targetReturn = 0.005;
     int returnsStartIdx = 0;
-    int returnsEndIdx = 2;
+    int returnsEndIdx = 4;
 
     model.calculatePortfolioWeights(returnMatrix, returnsStartIdx, returnsEndIdx, targetReturn);
 

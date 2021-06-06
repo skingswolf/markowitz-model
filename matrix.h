@@ -113,7 +113,7 @@ vector<vector<T> > applyBinaryOperatorToMatrices(vector<vector<T> > matrix, vect
  * @return The row vector.
  **/
 template <typename T>
-void convertFromColumnToRowVector(vector<vector<T> > &columnVector);
+vector<T> convertFromColumnToRowVector(const vector<vector<T> > &columnVector);
 
 /**
  * Prints a matrix of generic type "T" to STDOUT.

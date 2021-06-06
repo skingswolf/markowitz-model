@@ -242,12 +242,18 @@ vector<vector<T> > getMatrixTranspose(vector<vector<T> > &matrix)
  * @return The row vector.
  **/
 template <typename T>
-void convertFromColumnToRowVector(vector<vector<T> > &columnVector)
+vector<T> convertFromColumnToRowVector(const vector<vector<T> > &columnVector)
 {
-    for (int i = 0; i < columnVector.size(); i++)
+    int numOfElements = columnVector.size();
+    vector<T> rowVector;
+    rowVector.resize(numOfElements);
+
+    for (int i = 0; i < numOfElements; i++)
     {
-        columnVector[i] = columnVector[i][0];
+        rowVector[i] = columnVector[i][0];
     }
+
+    return rowVector;
 }
 
 /**
@@ -297,6 +303,6 @@ template double add(double x, double y);
 template double subtract(double x, double y);
 template vector<vector<double> > applyBinaryOperatorToMatrices(vector<vector<double> > matrix, vector<vector<double> > otherMatrix, double (*operatorFunction)(double, double));
 template vector<vector<double> > getMatrixTranspose(vector<vector<double> > &matrix);
-template void convertFromColumnToRowVector(vector<vector<double> > &columnVector);
+template vector<double> convertFromColumnToRowVector(const vector<vector<double> > &columnVector);
 template void printMatrix(const vector<vector<double> > &matrix);
 template void printRowVector(const vector<double> &rowVector);

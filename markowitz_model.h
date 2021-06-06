@@ -6,9 +6,8 @@
 #include <stdlib.h>
 #include <vector>
 #include "portfolio_optimisation_model.h"
-// #include "matrix.h"
+#include "matrix.h"
 #include "utils.h"
-#include "read_data.h"
 
 using namespace std;
 

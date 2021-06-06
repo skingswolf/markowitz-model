@@ -43,6 +43,24 @@ private:
     const double toleranceThreshold = 0.000001;
 
     /**
+     * Calculate the alpha in the conjugate gradient method.
+     * 
+     * @param Q - The matrix Q.
+     * @param p - The matrix p.
+     * @param sProduct - the scalar value s^T * s.
+     * @return The scalar value alpha.
+     **/
+    double calculateAlpha(vector<vector<double> > &Q, vector<vector<double> > &p, double sProduct);
+
+    /**
+     * Calculate the matrix multiplication of s transpose and s.
+     * 
+     * @param s - The matrix s. Dimensions = (numOfAssets + 2) x 1.
+     * @return The scalar value s^T * s.
+     **/
+    double calculateSProduct(vector<vector<double> > &s);
+
+    /**
      * Calculate the matrix Q. Consists of the covariance matrix,
      * the asset mean returns and vectors of 1.
      *

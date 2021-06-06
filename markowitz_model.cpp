@@ -17,39 +17,59 @@ vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<dou
 {
     int numOfAssets = returnsMatrix.size();
     cout << "number of Assets: " << numOfAssets << endl;
+
     vector<vector<double> > weights = initialisePortfolioWeights(numOfAssets);
-
-    double alpha, beta;
-    double sTransposeTimesS = 0; // 1.79769e+308
-
-    for (int i = 0; sTransposeTimesS > toleranceThreshold; i++)
-    {
-        break;
-    }
-
-    cout << targetReturn << endl;
-
-    printMatrix(returnsMatrix);
-    cout << "-----------" << endl;
-
     vector<vector<double> > covarianceMatrix = estimateCovarianceMatrix(returnsMatrix, returnsStartIdx, returnsEndIdx);
-    printMatrix(covarianceMatrix);
-    cout << "-----------" << endl;
-    // vector<vector<double> > qPartOne = multiplyMatrices(covarianceMatrix, weights);
-
     vector<vector<double> > meanReturns = calculateMeanReturns(returnsMatrix, returnsStartIdx, returnsEndIdx);
-    printMatrix(meanReturns);
-    cout << "-----------" << endl;
 
+    // Initialise variables for the conjugate gradient method.
+    vector<vector<double> > Q = calculateQ(meanReturns, returnsMatrix, returnsStartIdx, returnsEndIdx, numOfAssets);
     vector<vector<double> > x = initialiseX(weights, numOfAssets);
     vector<vector<double> > b = calculateB(numOfAssets, targetReturn);
+    vector<vector<double> > s = subtractMatrices(b, multiplyMatrices(Q, x)); // s_0 = b - Q*x_0
+    vector<vector<double> > p = copyMatrix(s);
+
+    printMatrix(s);
+    cout << "-----------" << endl;
+    printMatrix(p);
+    cout << "-----------" << endl;
+
+    double alpha = 0;
+    double beta = 0;
+    double sProduct = calculateSProduct(s); // s^T * s
+    double prevSProduct = sProduct;
+
+    cout << "s^T * s: " << sProduct << endl;
+    cout << "-----------" << endl;
+
+    // Temp variables used in conjugate gradient method.
+
+    for (int i = 0; sProduct > toleranceThreshold; i++)
+    {
+        alpha = calculateAlpha(Q, p, sProduct);
+
+        cout << alpha << endl;
+        cout << "-----------" << endl;
+
+        prevSProduct = sProduct;
+        break;
+    }
+    // printMatrix(sProduct);
+    // cout << "-----------" << endl;
+
+    // printMatrix(s);
+    // cout << "-----------" << endl;
+
+    // cout << "s^T * s: " << sProduct << endl;
+    // printMatrix(sProduct);
+    // cout << "-----------" << endl;
+
+    // printMatrix(Q);
+    // cout << "-----------" << endl;
+
     // printMatrix(x);
     // cout << "-----------" << endl;
     // printMatrix(b);
-
-    vector<vector<double> > Q = calculateQ(meanReturns, returnsMatrix, returnsStartIdx, returnsEndIdx, numOfAssets);
-    printMatrix(Q);
-    cout << "-----------" << endl;
 
     vector<double> portfolioWeights = convertFromColumnToRowVector(weights);
     // cout << sumPortfolioWeights(portfolioWeights) << endl;
@@ -59,6 +79,35 @@ vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<dou
 }
 
 /***************** Private Methods *****************/
+
+/**
+ * Calculate the alpha in the conjugate gradient method.
+ * 
+ * @param Q - The matrix Q.
+ * @param p - The matrix p.
+ * @param sProduct - the scalar value s^T * s.
+ * @return The scalar value alpha.
+ **/
+double MarkowitzModel::calculateAlpha(vector<vector<double> > &Q, vector<vector<double> > &p, double sProduct)
+{
+    vector<vector<double> > pTranspose = getMatrixTranspose(p);
+    vector<vector<double> > Qp = multiplyMatrices(Q, p);
+
+    return multiplyMatrices(pTranspose, Qp)[0][0]; // s^T * s
+}
+
+/**
+ * Calculate the matrix multiplication of s transpose and s.
+ * 
+ * @param s - The matrix s. Dimensions = (numOfAssets + 2) x 1.
+ * @return The scalar value s^T * s.
+ **/
+double MarkowitzModel::calculateSProduct(vector<vector<double> > &s)
+{
+    vector<vector<double> > sTranspose = getMatrixTranspose(s);
+
+    return multiplyMatrices(sTranspose, s)[0][0]; // s^T * s
+}
 
 /**
  * Calculate the matrix Q. Consists of the covariance matrix,

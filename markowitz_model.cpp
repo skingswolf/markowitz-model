@@ -46,6 +46,9 @@ vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<dou
 
     for (int i = 0; sProduct > toleranceThreshold; i++)
     {
+        checkWeights(x, numOfAssets);
+        cout << "-----------" << endl;
+
         alpha = calculateAlpha(Q, p, sProduct);
         cout << alpha << endl;
         cout << "-----------" << endl;
@@ -75,8 +78,8 @@ vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<dou
     // cout << "-----------" << endl;
     // printMatrix(b);
 
-    vector<double> portfolioWeights = convertFromColumnToRowVector(weights);
-    // cout << sumPortfolioWeights(portfolioWeights) << endl;
+    vector<double> portfolioWeights = parseOutWeights(x, numOfAssets);
+    // checkWeights(portfolioWeights);
     // printRowVector(portfolioWeights);
 
     return portfolioWeights;
@@ -287,6 +290,41 @@ vector<vector<double> > MarkowitzModel::calculateMeanReturns(const vector<vector
     }
 
     return meanReturns;
+}
+
+/**
+ * Check to see if the portfolio weights sum to zero.
+ * Print an appropriate message to STDOUT.
+ * 
+ * @param x = The column vector x.
+ * @param numOfAssets - The number of assets in scope.
+ **/
+void MarkowitzModel::checkWeights(vector<vector<double> > &x, int numOfAssets)
+{
+    vector<double> weights = parseOutWeights(x, numOfAssets);
+    cout << "Weights sum to: " << sumPortfolioWeights(weights) << endl;
+}
+
+/**
+ * Parses out the weights from column vector x. The 
+ * first `numOfAssets` elements in x correspond to the
+ * portfolio weights and should sum to 1.
+ * 
+ * @param x = The column vector x.
+ * @param numOfAssets - The number of assets in scope.
+ * @return The vector of portfolio weights.
+ **/
+vector<double> MarkowitzModel::parseOutWeights(vector<vector<double> > &x, int numOfAssets)
+{
+    vector<double> weights;
+    weights.resize(numOfAssets);
+
+    for (int i = 0; i < numOfAssets; i++)
+    {
+        weights[i] = x[i][0];
+    }
+
+    return weights;
 }
 
 /**

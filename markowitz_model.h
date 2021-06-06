@@ -120,6 +120,26 @@ private:
     vector<vector<double> > calculateMeanReturns(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx);
 
     /**
+     * Check to see if the portfolio weights sum to zero.
+     * Print an appropriate message to STDOUT.
+     * 
+     * @param x = The column vector x.
+     * @param numOfAssets - The number of assets in scope.
+     **/
+    void checkWeights(vector<vector<double> > &x, int numOfAssets);
+
+    /**
+     * Parses out the weights from column vector x. The 
+     * first `numOfAssets` elements in x correspond to the
+     * portfolio weights and should sum to 1.
+     * 
+     * @param x = The column vector x.
+     * @param numOfAssets - The number of assets in scope.
+     * @return The vector of portfolio weights.
+     **/
+    vector<double> parseOutWeights(vector<vector<double> > &x, int numOfAssets);
+
+    /**
      * Debugging method for checking that outputted portfolio 
      * weights sum to one.
      * 

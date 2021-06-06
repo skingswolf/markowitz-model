@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS = -Wall -g -Wc++11-extensions
+CXXFLAGS = -Wall -g -w
 
 
 csv.o: csv.h
@@ -20,4 +20,4 @@ main: main.o markowitz_model.o matrix.o utils.o read_data.o csv.o
 
 .PHONY: clean
 clean:
-	rm -r *.o read_data utils matrix main markowitz_model
+	rm -r *.o main

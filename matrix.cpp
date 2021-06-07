@@ -261,6 +261,30 @@ vector<T> convertFromColumnToRowVector(vector<vector<T> > &columnVector)
 }
 
 /**
+ * Converts the given row vector to a column vector.
+ * 
+ * @param rowVector - The row vector to be converted.
+ * @return The column vector.
+ **/
+template <typename T>
+vector<vector<T> > convertFromRowToColumnVector(vector<T> &rowVector)
+{
+    int numOfElements = rowVector.size();
+    vector<T> columnVector;
+    columnVector.resize(numOfElements);
+
+    for (int i = 0; i < numOfElements; i++)
+    {
+        vector<T> cRow;
+        cRow.resize(1);
+        cRow[0] = rowVector[i];
+        columnVector[i] = cRow[0];
+    }
+
+    return columnVector;
+}
+
+/**
  * Returns a copy of the given matrix.
  * 
  * @param matrix - The matrix to be copied.
@@ -338,6 +362,7 @@ template double subtract(double x, double y);
 template vector<vector<double> > applyBinaryOperatorToMatrices(vector<vector<double> > matrix, vector<vector<double> > otherMatrix, double (*operatorFunction)(double, double));
 template vector<vector<double> > getMatrixTranspose(vector<vector<double> > &matrix);
 template vector<double> convertFromColumnToRowVector(vector<vector<double> > &columnVector);
+template vector<vector<double> > convertFromRowToColumnVector(vector<double> &rowVector);
 template vector<vector<double> > copyMatrix(vector<vector<double> > &matrix);
 template void printMatrix(vector<vector<double> > &matrix);
 template void printRowVector(vector<double> &rowVector);

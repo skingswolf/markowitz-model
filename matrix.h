@@ -116,6 +116,15 @@ template <typename T>
 vector<T> convertFromColumnToRowVector(vector<vector<T> > &columnVector);
 
 /**
+ * Converts the given row vector to a column vector.
+ * 
+ * @param rowVector - The row vector to be converted.
+ * @return The column vector.
+ **/
+template <typename T>
+vector<vector<T> > convertFromRowToColumnVector(vector<T> &rowVector);
+
+/**
  * Returns a copy of the given matrix.
  * 
  * @param matrix - The matrix to be copied.

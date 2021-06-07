@@ -17,7 +17,7 @@ int main()
     // int numOfAssets = 5;
     // int numOfReturns = 10;
 
-    // // Warning - you get some ridicously weights with the CSV file.
+    // // Warning - you get some ridicously weights with this CSV file.
     // // These "returns" in this file are all >> 1. Was used for debugging
     // // in the early stages of this project.
     // string fileName = "dummy_returns.csv";

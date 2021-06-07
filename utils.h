@@ -31,4 +31,14 @@ vector<vector<double> > estimateCovarianceMatrix(const vector<vector<double> > &
  **/
 double calculateMeanReturn(const vector<vector<double> > &returnsMatrix, int assetIdx, int returnsStartIdx, int returnsEndIdx);
 
+/**
+ * Returns a column vector of mean returns corresponding to the time period.
+ * 
+ * @param returnsMatrix - The matrix of time-indexed returns.
+ * @param returnsStartIdx - The "first day" of the sample of returns.
+ * @param returnsEndIdx - The "last day" of the sample of returns.
+ * @return The column vector of mean returns.
+ **/
+vector<vector<double> > calculateMeanReturns(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx);
+
 #endif

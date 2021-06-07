@@ -91,3 +91,29 @@ double calculateMeanReturn(const vector<vector<double> > &returnsMatrix, int ass
 
     return meanReturn / numOfReturns;
 }
+
+/**
+ * Returns a column vector of mean returns corresponding to the time period.
+ * 
+ * @param returnsMatrix - The matrix of time-indexed returns.
+ * @param returnsStartIdx - The "first day" of the sample of returns.
+ * @param returnsEndIdx - The "last day" of the sample of returns.
+ * @return The column vector of mean returns.
+ **/
+vector<vector<double> > calculateMeanReturns(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx)
+{
+    int numOfAssets = returnsMatrix.size();
+
+    vector<vector<double> > meanReturns;
+    meanReturns.resize(numOfAssets);
+
+    for (int i = 0; i < numOfAssets; i++)
+    {
+        vector<double> meanReturn;
+        meanReturn.resize(1);
+        meanReturn[0] = calculateMeanReturn(returnsMatrix, i, returnsStartIdx, returnsEndIdx);
+        meanReturns[i] = meanReturn;
+    }
+
+    return meanReturns;
+}

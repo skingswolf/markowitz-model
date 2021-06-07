@@ -289,32 +289,6 @@ vector<vector<double> > MarkowitzModel::calculateB(int numOfAssets, double targe
 }
 
 /**
- * Returns a column vector of mean returns corresponding to the time period.
- * 
- * @param returnsMatrix - The matrix of time-indexed returns.
- * @param returnsStartIdx - The "first day" of the sample of returns.
- * @param returnsEndIdx - The "last day" of the sample of returns.
- * @return The column vector of mean returns.
- **/
-vector<vector<double> > MarkowitzModel::calculateMeanReturns(const vector<vector<double> > &returnsMatrix, int returnsStartIdx, int returnsEndIdx)
-{
-    int numOfAssets = returnsMatrix.size();
-
-    vector<vector<double> > meanReturns;
-    meanReturns.resize(numOfAssets);
-
-    for (int i = 0; i < numOfAssets; i++)
-    {
-        vector<double> meanReturn;
-        meanReturn.resize(1);
-        meanReturn[0] = calculateMeanReturn(returnsMatrix, i, returnsStartIdx, returnsEndIdx);
-        meanReturns[i] = meanReturn;
-    }
-
-    return meanReturns;
-}
-
-/**
  * Check to see if the portfolio weights sum to zero.
  * Print an appropriate message to STDOUT.
  * 

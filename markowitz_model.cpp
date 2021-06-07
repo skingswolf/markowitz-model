@@ -36,9 +36,6 @@ vector<double> MarkowitzModel::calculatePortfolioWeights(const vector<vector<dou
     // Apply Conjugate Gradient Method.
     for (int i = 0; sProduct > toleranceThreshold; i++)
     {
-        checkWeights(x, numOfAssets);
-        cout << "-----------" << endl;
-
         alpha = calculateAlpha(Q, p, sProduct);
         x = updateX(x, p, alpha);
 

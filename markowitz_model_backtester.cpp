@@ -15,25 +15,9 @@ void MarkowitzModelBacktester::evaluatePerformance(const vector<vector<double> >
     int numOfAssets = returnsMatrix.size();
     int numOfReturns = returnsMatrix[0].size();
 
-    // double bestPortfolioTargetReturn = 0;
-    // int bestPortfolioOutOfSampleDay = 0;
-    // double bestPortfolioReturn = 0;
-    // double bestPortfolioStandardDeviation = 0;
-
     vector<double> targetReturns = initialiseTargetReturns();
 
-    int firstInSampleDay = 0;
-    int lastInSampleDay = firstInSampleDay + inSampleSize - 1;
-    // int firstOutOfSampleDay = firstInSampleDay + inSampleSize;
-    // int lastOutOfSampleDay = lastInSampleDay + outOfSampleSize - 1;
-
     recordBacktestResults(returnsMatrix, model, targetReturns, inSampleSize, outOfSampleSize, numOfReturns);
-
-    // vector<double> inSampleWeights = model.calculatePortfolioWeights(returnsMatrix, firstInSampleDay, lastInSampleDay, 0.01);
-
-    // double sharpeRatio = calculateSharpeRatio(returnsMatrix, firstInSampleDay, lastInSampleDay, inSampleWeights);
-    // cout << "Sharpe Ratio: " << sharpeRatio << endl;
-    // cout << "-----" << endl;
 }
 
 /**
@@ -83,21 +67,23 @@ void MarkowitzModelBacktester::recordBacktestResults(const vector<vector<double>
 
         for (int windowIdx = 0; windowIdx < numOfWindows; windowIdx++)
         {
-
-            // targetReturns[targetReturnIdx]
             inSampleWeights = model.calculatePortfolioWeights(returnsMatrix, firstInSampleDay, lastInSampleDay, targetReturns[targetReturnIdx]);
             inSampleWeightsColumnVector = convertFromRowToColumnVector(inSampleWeights);
 
             backtestingReturns[targetReturnIdx][windowIdx] = calculatePortfolioMeanReturn(returnsMatrix, firstOutOfSampleDay, lastOutOfSampleDay, inSampleWeightsColumnVector);
             backtestingSharpeRatios[targetReturnIdx][windowIdx] = calculateSharpeRatio(returnsMatrix, firstOutOfSampleDay, lastOutOfSampleDay, inSampleWeights);
 
-            cout << "targetReturnIdx" << targetReturnIdx << ", windowIdx: " << windowIdx << endl;
-
             firstInSampleDay += outOfSampleSize;
             lastInSampleDay += outOfSampleSize;
             firstOutOfSampleDay += outOfSampleSize;
             lastOutOfSampleDay += outOfSampleSize;
         }
+
+        // Reset sample space boundaries.
+        firstInSampleDay = 0;
+        lastInSampleDay = firstInSampleDay + inSampleSize - 1;
+        firstOutOfSampleDay = firstInSampleDay + inSampleSize;
+        lastOutOfSampleDay = firstOutOfSampleDay + outOfSampleSize - 1;
     }
 
     writeToCsv(backtestingReturns, targetReturns, "backtest_returns.csv", numOfTargetReturns, numOfWindows);

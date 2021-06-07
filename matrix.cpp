@@ -270,7 +270,7 @@ template <typename T>
 vector<vector<T> > convertFromRowToColumnVector(vector<T> &rowVector)
 {
     int numOfElements = rowVector.size();
-    vector<T> columnVector;
+    vector<vector<T> > columnVector;
     columnVector.resize(numOfElements);
 
     for (int i = 0; i < numOfElements; i++)
@@ -278,7 +278,7 @@ vector<vector<T> > convertFromRowToColumnVector(vector<T> &rowVector)
         vector<T> cRow;
         cRow.resize(1);
         cRow[0] = rowVector[i];
-        columnVector[i] = cRow[0];
+        columnVector[i] = cRow;
     }
 
     return columnVector;

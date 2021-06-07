@@ -1,4 +1,5 @@
 #include "markowitz_model.h"
+#include "markowitz_model_backtester.h"
 #include "read_data.h"
 #include "matrix.h"
 
@@ -9,6 +10,8 @@ int main()
     string fileName = "asset_returns.csv";
     int numOfAssets = 83;
     int numOfReturns = 700;
+    int inSampleSize = 100;
+    int outOfSampleSize = 12;
 
     // string fileName = "asset_returns_small.csv";
     // int numOfAssets = 5;
@@ -29,10 +32,13 @@ int main()
     int returnsStartIdx = 0;
     int returnsEndIdx = 4;
 
-    vector<double> weights = model.calculatePortfolioWeights(returnsMatrix, returnsStartIdx, returnsEndIdx, targetReturn);
+    // vector<double> weights = model.calculatePortfolioWeights(returnsMatrix, returnsStartIdx, returnsEndIdx, targetReturn);
 
-    cout << "The optimal weights are: " << endl;
-    printRowVector(weights);
+    // cout << "The optimal weights are: " << endl;
+    // printRowVector(weights);
+
+    MarkowitzModelBacktester backtester;
+    backtester.evaluatePerformance(returnsMatrix, model, inSampleSize, outOfSampleSize);
 
     return 0;
 }

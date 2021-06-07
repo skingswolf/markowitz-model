@@ -94,6 +94,8 @@ double calculateMeanReturn(const vector<vector<double> > &returnsMatrix, int ass
 
 /**
  * Returns a column vector of mean returns corresponding to the time period.
+ * The start and end index parameters denote the (inclusive) range of returns
+ * to calculate the returns for.
  * 
  * @param returnsMatrix - The matrix of time-indexed returns.
  * @param returnsStartIdx - The "first day" of the sample of returns.

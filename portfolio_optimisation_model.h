@@ -2,7 +2,6 @@
 #define PortfolioOptimisationModel_h
 
 #include <vector>
-#include "matrix.h"
 
 using namespace std;
 
